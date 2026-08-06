@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🐉 龙之归宿加速器 v4.0</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#080c18;--card:#0f1525;--border:#1a2340;--accent:#00d4ff;--ok:#00ff88;--warn:#ffaa00;--err:#ff4444;--text:#e8ecf4;--dim:#6b7a9e}
+body{font-family:'Microsoft YaHei','PingFang SC',sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
+header{display:flex;align-items:center;justify-content:space-between;padding:10px 20px;background:linear-gradient(90deg,#0a0e1a,#101830);border-bottom:1px solid var(--border)}
+.logo{display:flex;align-items:center;gap:8px}
+.logo span:first-child{font-size:24px}.logo h1{font-size:16px;font-weight:700;background:linear-gradient(90deg,#ffcc00,#ff3344);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.tabs{display:flex;gap:4px}
+.tab{padding:6px 14px;border:1px solid var(--border);border-radius:8px;font-size:12px;cursor:pointer;background:transparent;color:var(--text);transition:.2s}
+.tab:hover,.tab.active{border-color:var(--accent);color:var(--accent);background:rgba(0,212,255,.05)}
+main{max-width:1100px;margin:0 auto;padding:14px}
+.page{display:none}.page.active{display:block}
+.grid{display:grid;gap:12px}.g2{grid-template-columns:1fr 1fr}.g3{grid-template-columns:1fr 1fr 1fr}
+.card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px}
+.card h3{font-size:13px;color:var(--accent);margin-bottom:10px;display:flex;align-items:center;gap:6px}
+.row{display:flex;justify-content:space-between;padding:4px 0;font-size:13px;border-bottom:1px solid rgba(255,255,255,.03)}
+.row:last-child{border:none}.k{color:var(--dim)}.v{font-family:Consolas,monospace}
+.btn{padding:8px 16px;border:1px solid var(--border);border-radius:8px;background:var(--card);color:var(--text);font-size:13px;cursor:pointer;transition:.2s}
+.btn:hover{border-color:var(--accent);color:var(--accent)}
+.btn.on{border-color:var(--ok);color:var(--ok);background:rgba(0,255,136,.08)}
+.btn.primary{background:linear-gradient(135deg,var(--accent),#0088cc);border:none;color:#fff;font-weight:600}
+.btn.danger{border-color:var(--err);color:var(--err)}
+.switch{position:relative;display:inline-block;width:40px;height:22px}
+.switch input{opacity:0;width:0;height:0}
+.slider{position:absolute;cursor:pointer;top:0;left:0;right:0;bottom:0;background:#333;border-radius:22px;transition:.3s}
+.slider:before{content:'';position:absolute;height:16px;width:16px;left:3px;bottom:3px;background:#fff;border-radius:50%;transition:.3s}
+input:checked+.slider{background:var(--ok)}
+input:checked+.slider:before{transform:translateX(18px)}
+.hero{display:flex;align-items:center;gap:20px;padding:14px}
+.ring-wrap{position:relative;width:120px;height:120px;flex-shrink:0}
+.ring-wrap svg{width:100%;height:100%;transform:rotate(-90deg)}
+.r-bg{fill:none;stroke:var(--border);stroke-width:8}.r-fg{fill:none;stroke:var(--accent);stroke-width:8;stroke-linecap:round;stroke-dasharray:301.6;stroke-dashoffset:301.6;transition:all .8s}
+.r-fg.ok{stroke:var(--ok)}.r-fg.warn{stroke:var(--warn)}.r-fg.err{stroke:var(--err)}
+.ring-inner{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center}
+.ring-inner .n{font-size:32px;font-weight:800;font-family:Consolas,monospace}
+.ring-inner .u{font-size:12px;color:var(--dim)}
+.stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;flex:1}
+.stat{background:rgba(255,255,255,.03);border-radius:8px;padding:8px 10px}
+.stat .k{font-size:10px;color:var(--dim);margin-bottom:2px}.stat .v{font-size:18px;font-weight:700;font-family:Consolas,monospace}
+canvas#minimap{border-radius:8px;background:#050a15;border:1px solid var(--border)}
+.entity-list{max-height:160px;overflow-y:auto;font-size:12px}
+.entity-list::-webkit-scrollbar{width:3px}.entity-list::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px}
+.er{display:flex;gap:6px;padding:3px 0;align-items:center}
+.er .dot{width:6px;height:6px;border-radius:50%}.er .name{flex:1;font-family:Consolas,monospace}.er .dist{color:var(--dim);font-family:Consolas,monospace;width:50px;text-align:right}
+.recommend{background:rgba(0,212,255,.05);border:1px solid rgba(0,212,255,.12);border-radius:8px;padding:8px 12px;font-size:12px;line-height:1.6;margin-top:8px}
+.tut{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:16px;line-height:2;font-size:13px}
+.tut h2{color:var(--accent);margin-bottom:10px;font-size:15px}
+.tut code{background:rgba(0,212,255,.1);color:var(--accent);padding:1px 6px;border-radius:4px;font-size:12px}
+.tut ol{padding-left:20px}
+.acc-row{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid rgba(255,255,255,.03)}
+.acc-row .name{flex:1;font-weight:600}.acc-row .port{font-family:Consolas,monospace;color:var(--dim);font-size:12px}
+.acc-row .status{font-size:11px;padding:2px 8px;border-radius:10px}
+.acc-row .status.on{background:rgba(0,255,136,.1);color:var(--ok)}.acc-row .status.off{background:rgba(255,255,255,.05);color:var(--dim)}
+input[type=text]{background:var(--bg);border:1px solid var(--border);border-radius:6px;padding:6px 10px;color:var(--text);font-size:13px;outline:none}
+input[type=text]:focus{border-color:var(--accent)}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.5}}
+.pulse{animation:pulse 1s infinite}
+</style>
+</head>
+<body>
+<header>
+  <div class="logo"><span>🐉</span><h1>龙之归宿加速器</h1><span style="font-size:10px;color:var(--dim)">v4.0</span></div>
+  <div class="tabs">
+    <button class="tab active" onclick="showPage('dash')">📊 仪表盘</button>
+    <button class="tab" onclick="showPage('settings')">⚙️ 设置</button>
+    <button class="tab" onclick="showPage('multi')">👥 多开</button>
+    <button class="tab" onclick="showPage('tutorial')">📖 教程</button>
+  </div>
+</header>
+
+<main>
+  <!-- 仪表盘 -->
+  <div class="page active" id="page-dash">
+    <div class="card hero" style="margin-bottom:12px">
+      <div class="ring-wrap">
+        <svg viewBox="0 0 110 110"><circle class="r-bg" cx="55" cy="55" r="48"/><circle class="r-fg" cx="55" cy="55" r="48" id="ring"/></svg>
+        <div class="ring-inner"><div class="n" id="latVal">--</div><div class="u">ms</div></div>
+      </div>
+      <div class="stats-row">
+        <div class="stat"><div class="k">平均延迟</div><div class="v" id="sAvg">--</div></div>
+        <div class="stat"><div class="k">抖动</div><div class="v" id="sJitter">--</div></div>
+        <div class="stat"><div class="k">丢包</div><div class="v" id="sLoss">--</div></div>
+        <div class="stat"><div class="k">缓存命中</div><div class="v" id="sCache">--</div></div>
+        <div class="stat"><div class="k">WS 帧</div><div class="v" id="sFrames">--</div></div>
+        <div class="stat"><div class="k">实体数</div><div class="v" id="sEntities">--</div></div>
+        <div class="stat"><div class="k">解析帧</div><div class="v" id="sParse">--</div></div>
+        <div class="stat"><div class="k">运行</div><div class="v" id="sUptime">--</div></div>
+      </div>
+    </div>
+    <div class="grid g3">
+      <div class="card">
+        <h3>🎮 玩家状态</h3>
+        <div class="row"><span class="k">状态</span><span class="v" id="pAlive">--</span></div>
+        <div class="row"><span class="k">分数</span><span class="v" id="pScore">--</span></div>
+        <div class="row"><span class="k">位置</span><span class="v" id="pPos">--</span></div>
+        <div class="row"><span class="k">速度</span><span class="v" id="pSpeed">--</span></div>
+        <div class="row"><span class="k">航向</span><span class="v" id="pDir">--</span></div>
+      </div>
+      <div class="card">
+        <h3>⚠️ 威胁</h3>
+        <div class="row"><span class="k">等级</span><span class="v" id="tLevel">--</span></div>
+        <div class="row"><span class="k">敌人</span><span class="v" id="tCount">0</span></div>
+        <div id="tList" class="entity-list"></div>
+        <div id="tRec" class="recommend">安全区域</div>
+      </div>
+      <div class="card">
+        <h3>📦 资源</h3>
+        <div id="rList" class="entity-list"><div style="color:var(--dim);font-size:12px">扫描中...</div></div>
+      </div>
+    </div>
+    <div class="grid g2" style="margin-top:12px">
+      <div class="card" style="display:flex;justify-content:center">
+        <canvas id="minimap" width="200" height="200"></canvas>
+      </div>
+      <div class="card">
+        <h3>📡 代理统计</h3>
+        <div class="row"><span class="k">HTTP 请求</span><span class="v" id="pxReqs">--</span></div>
+        <div class="row"><span class="k">缓存命中</span><span class="v" id="pxHits">--</span></div>
+        <div class="row"><span class="k">缓存项</span><span class="v" id="pxItems">--</span></div>
+        <div class="row"><span class="k">WS 活跃</span><span class="v" id="pxWs">--</span></div>
+        <div class="row"><span class="k">WS 帧</span><span class="v" id="pxWf">--</span></div>
+        <div class="row"><span class="k">错误</span><span class="v" id="pxErr">--</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 设置 -->
+  <div class="page" id="page-settings">
+    <div class="grid g2">
+      <div class="card">
+        <h3>🎯 自动操作</h3>
+        <div class="row"><span class="k">自动瞄准</span><label class="switch"><input type="checkbox" id="cAim" onchange="saveSetting('autoAim',this.checked)"><span class="slider"></span></label></div>
+        <div class="row"><span class="k">自动开火</span><label class="switch"><input type="checkbox" id="cFire" onchange="saveSetting('autoFire',this.checked)"><span class="slider"></span></label></div>
+        <div class="row"><span class="k">自动规避</span><label class="switch"><input type="checkbox" id="cDodge" onchange="saveSetting('autoDodge',this.checked)"><span class="slider"></span></label></div>
+        <div class="row"><span class="k">自动收集</span><label class="switch"><input type="checkbox" id="cCollect" onchange="saveSetting('autoCollect',this.checked)"><span class="slider"></span></label></div>
+      </div>
+      <div class="card">
+        <h3>🌐 游戏目标</h3>
+        <div class="row"><span class="k">MK49 (龙之归宿)</span><label class="switch"><input type="checkbox" id="gMk49" checked onchange="saveGame(0,this.checked)"><span class="slider"></span></label></div>
+        <div class="row"><span class="k">MK48.io</span><label class="switch"><input type="checkbox" id="gMk48" checked onchange="saveGame(1,this.checked)"><span class="slider"></span></label></div>
+        <div class="row"><span class="k">MK49 论坛</span><label class="switch"><input type="checkbox" id="gForum" onchange="saveGame(2,this.checked)"><span class="slider"></span></label></div>
+      </div>
+      <div class="card">
+        <h3>💾 缓存 & 网络</h3>
+        <div class="row"><span class="k">资源缓存</span><label class="switch"><input type="checkbox" id="cCache" checked onchange="saveSetting('cacheEnabled',this.checked)"><span class="slider"></span></label></div>
+        <div class="row"><span class="k">DNS 预解析</span><label class="switch"><input type="checkbox" id="cDns" checked onchange="saveSetting('dnsPrefetch',this.checked)"><span class="slider"></span></label></div>
+        <div class="row"><span class="k">启动预加载</span><label class="switch"><input type="checkbox" id="cPrefetch" checked onchange="saveSetting('prefetchOnStart',this.checked)"><span class="slider"></span></label></div>
+        <div class="row"><span class="k">TCP NoDelay</span><label class="switch"><input type="checkbox" id="cTcp" checked onchange="saveSetting('tcpNoDelay',this.checked)"><span class="slider"></span></label></div>
+      </div>
+      <div class="card">
+        <h3>🔐 保持登录</h3>
+        <div class="row"><span class="k">启用</span><label class="switch"><input type="checkbox" id="cKeep" checked onchange="saveSetting('keepLogin',this.checked)"><span class="slider"></span></label></div>
+        <div class="row"><span class="k">心跳间隔</span><span class="v">5 分钟</span></div>
+        <div class="row"><span class="k">状态</span><span class="v" id="keepStatus">--</span></div>
+      </div>
+    </div>
+    <div style="margin-top:12px;display:flex;gap:8px">
+      <button class="btn" onclick="fetch('/api/clear-cache').then(()=>alert('缓存已清空'))">🧹 清空缓存</button>
+      <button class="btn danger" onclick="if(confirm('确定重置所有设置？'))fetch('/api/settings',{method:'POST',body:JSON.stringify({setupDone:false})}).then(()=>location.reload())">🔄 重置设置</button>
+    </div>
+  </div>
+
+  <!-- 多开 -->
+  <div class="page" id="page-multi">
+    <div class="card">
+      <h3>👥 多开管理器</h3>
+      <p style="font-size:12px;color:var(--dim);margin-bottom:12px">同时运行多个游戏账号，每个实例独立代理端口，独立 Cookie 存储</p>
+      <div style="display:flex;gap:8px;margin-bottom:12px">
+        <input type="text" id="accAlias" placeholder="账号别名 (如: 小号1)">
+        <select id="accServer" style="background:var(--bg);border:1px solid var(--border);border-radius:6px;padding:6px 10px;color:var(--text);font-size:13px">
+          <option value="game.mk49.top">MK49 (game.mk49.top)</option>
+          <option value="mk48.io">MK48.io</option>
+        </select>
+        <button class="btn primary" onclick="addAccount()">➕ 添加</button>
+      </div>
+      <div id="accList"></div>
+    </div>
+  </div>
+
+  <!-- 教程 -->
+  <div class="page" id="page-tutorial">
+    <div class="tut">
+      <h2>📖 使用教程</h2>
+      <ol>
+        <li><b>启动加速器</b> — 运行 <code>npm start</code>，代理自动启动</li>
+        <li><b>配置浏览器代理</b> — 设置 → 网络 → 代理 → 手动代理：
+          <br>HTTP: <code>127.0.0.1</code> 端口: <code>9527</code>
+          <br>HTTPS: <code>127.0.0.1</code> 端口: <code>9527</code></li>
+        <li><b>打开游戏</b> — 访问 <code>https://game.mk49.top</code> 或 <code>https://mk48.io</code></li>
+        <li><b>首次加载</b> — 资源会从远程下载并缓存（约1-2秒）</li>
+        <li><b>后续加载</b> — 资源从本地缓存读取（<1ms），秒开！</li>
+        <li><b>查看仪表盘</b> — 浏览器打开 <code>http://localhost:3949</code></li>
+        <li><b>自动操作</b> — 在「设置」页面开启自动瞄准/开火/规避/收集</li>
+        <li><b>多开账号</b> — 在「多开」页面添加账号，每个账号独立代理端口</li>
+        <li><b>保持登录</b> — 默认开启，每5分钟发送心跳保持连接</li>
+      </ol>
+      <h2 style="margin-top:16px">⚡ 加速原理</h2>
+      <ol>
+        <li><b>资源缓存</b> — JS/WASM/图片首次下载后存本地，后续直接读取</li>
+        <li><b>DNS 预解析</b> — 启动时提前解析游戏域名，消除 DNS 延迟</li>
+        <li><b>TCP 优化</b> — 连接池复用 + NoDelay 减少握手开销</li>
+        <li><b>WebSocket 中继</b> — 游戏实时数据通过本地 WS 中继转发</li>
+      </ol>
+      <h2 style="margin-top:16px">🔧 代理配置详解</h2>
+      <ol>
+        <li>Chrome: 设置 → 系统 → 打开代理设置 → 局域网设置 → 代理服务器</li>
+        <li>Firefox: 设置 → 网络设置 → 手动代理配置</li>
+        <li>系统级: Windows 设置 → 网络 → 代理 → 手动设置</li>
+      </ol>
+      <h2 style="margin-top:16px">☁️ Cloudflare 部署</h2>
+      <ol>
+        <li>项目包含 <code>cloudflare-worker.js</code> 可部署到 Cloudflare Workers</li>
+        <li>运行 <code>wrangler deploy</code> 即可部署</li>
+        <li>通过 Worker URL 访问游戏，自带 CDN 加速</li>
+      </ol>
+    </div>
+  </div>
+</main>
+
+<script>
+const C=2*Math.PI*48,ring=document.getElementById('ring');
+const canvas=document.getElementById('minimap'),ctx=canvas.getContext('2d');
+const q=ms=>{if(ms<=0)return{c:'err',pct:0};if(ms<=30)return{c:'ok',pct:100};if(ms<=60)return{c:'ok',pct:85};if(ms<=100)return{c:'ok',pct:70};if(ms<=150)return{c:'warn',pct:50};return{c:'err',pct:20}};
+
+function showPage(id){document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));document.getElementById('page-'+id).classList.add('active');event.target.classList.add('active')}
+
+function drawMinimap(d){if(!d)return;ctx.clearRect(0,0,200,200);for(const i of d.items||[]){
+  if(i.type==='circle'){ctx.beginPath();ctx.arc(i.cx,i.cy,i.r,0,Math.PI*2);ctx.strokeStyle=i.stroke;ctx.stroke()}
+  else if(i.type==='shape'){ctx.save();ctx.translate(i.x,i.y);if(i.dir)ctx.rotate(i.dir);ctx.fillStyle=i.fill;
+    ctx.beginPath();ctx.arc(0,0,i.r||3,0,Math.PI*2);ctx.fill();ctx.restore()}}}
+
+function update(d){
+  const p=d.proxy||{},w=d.ws||{},pa=d.parser||{},m=d.monitor||{latency:0,jitter:0,packetLoss:0,avgLatency:0};
+  const h=d.hud||{};const lat=m.latency||0;const qq=q(lat);
+  ring.style.strokeDashoffset=C-(C*qq.pct/100);ring.className='r-fg '+qq.c;
+  document.getElementById('latVal').textContent=lat>0?lat:'--';
+  document.getElementById('sAvg').textContent=(m.avgLatency||'--')+'ms';
+  document.getElementById('sJitter').textContent=(m.jitter||'--')+'ms';
+  document.getElementById('sLoss').textContent=(m.packetLoss!=null?m.packetLoss:'--')+'%';
+  document.getElementById('sCache').textContent=p.hits||'0';
+  document.getElementById('sFrames').textContent=w.frames||'0';
+  document.getElementById('sEntities').textContent=pa.entities||'0';
+  document.getElementById('sParse').textContent=pa.frame||'0';
+  document.getElementById('sUptime').textContent=fmtTime(pa.frame?Math.floor(pa.frame/2):0);
+  // Player
+  const pl=h.player||{};
+  document.getElementById('pAlive').textContent=pl.alive?'🟢 存活':'🔴 死亡';
+  document.getElementById('pScore').textContent=pl.score||'0';
+  document.getElementById('pPos').textContent=pl.pos?`(${Math.round(pl.pos.x)},${Math.round(pl.pos.y)})`:'--';
+  document.getElementById('pSpeed').textContent=(pl.vel||0).toFixed(1);
+  document.getElementById('pDir').textContent=((pl.dir||0)*180/Math.PI).toFixed(0)+'°';
+  // Enemies
+  const el=h.enemies||[];
+  document.getElementById('tCount').textContent=el.length;
+  document.getElementById('tLevel').textContent=el.length===0?'🟢 安全':el.length<3?'🟡 注意':'🔴 危险';
+  document.getElementById('tList').innerHTML=el.map(e=>`<div class="er"><span class="dot" style="background:var(--err)"></span><span class="name">${e.type}</span><span class="dist">${e.dist}m</span></div>`).join('')||'<div style="color:var(--dim);font-size:12px">无威胁</div>';
+  document.getElementById('tRec').textContent=el.length===0?'安全区域，可自由探索':'检测到'+el.length+'个敌人，保持警戒';
+  // Resources
+  document.getElementById('rList').innerHTML=(h.resources||[]).map(r=>`<div class="er"><span class="dot" style="background:var(--warn)"></span><span class="name">${r.type}</span><span class="dist">${r.dist}m</span></div>`).join('')||'<div style="color:var(--dim)">无附近资源</div>';
+  // Proxy
+  document.getElementById('pxReqs').textContent=p.requests||'0';
+  document.getElementById('pxHits').textContent=p.hits||'0';
+  document.getElementById('pxItems').textContent=p.memItems||'0';
+  document.getElementById('pxWs').textContent=w.active||'0';
+  document.getElementById('pxWf').textContent=w.frames||'0';
+  document.getElementById('pxErr').textContent=(p.errors||0)+(w.errors||0);
+  drawMinimap(d.minimap);
+}
+function fmtTime(s){return Math.floor(s/60)+':'+String(s%60).padStart(2,'0')}
+
+// Settings
+function saveSetting(k,v){fetch('/api/settings',{method:'POST',body:JSON.stringify({[k]:v})})}
+function saveGame(i,v){fetch('/api/settings',{method:'POST',body:JSON.stringify({[`games.${i}.enabled`]:v})})}
+
+// Multi
+function addAccount(){const alias=document.getElementById('accAlias').value;const server=document.getElementById('accServer').value;if(!alias)return alert('请输入别名');
+  fetch('/api/multi/add',{method:'POST',body:JSON.stringify({alias,server})}).then(r=>r.json()).then(()=>loadAccounts())}
+function loadAccounts(){fetch('/api/stats').then(r=>r.json()).then(d=>{
+  const list=document.getElementById('accList');const accs=d.multi?.accounts||[];
+  list.innerHTML=accs.map(a=>`<div class="acc-row"><span class="name">${a.alias}</span><span class="port">${a.server}</span><span class="status ${a.running?'on':'off'}">${a.running?'运行中':'已停止'}</span><button class="btn" onclick="toggleAcc('${a.id}',${!a.running})">${a.running?'⏹ 停止':'▶ 启动'}</button></div>`).join('')||'<div style="color:var(--dim);font-size:12px;padding:8px 0">暂无账号，点击上方添加</div>'})}
+function toggleAcc(id,start){fetch('/api/multi/'+(start?'start':'stop'),{method:'POST',body:JSON.stringify({id})}).then(()=>loadAccounts())}
+
+// SSE
+const es=new EventSource('/events');
+es.onmessage=e=>{try{const d=JSON.parse(e.data);if(d.type==='stats'){update(d);loadAccounts()}}catch{}};
+es.onerror=()=>{};
+
+// Init
+loadAccounts();
+</script>
+</body>
+</html>

@@ -1,0 +1,44 @@
+{
+  "httpPort": 9527,
+  "wsPort": 9528,
+  "dashboardPort": 3949,
+  "games": [
+    {
+      "name": "MK49 (龙之归宿)",
+      "host": "game.mk49.top",
+      "enabled": true
+    },
+    {
+      "name": "MK48.io",
+      "host": "mk48.io",
+      "enabled": true
+    },
+    {
+      "name": "MK49 论坛",
+      "host": "forum.mk49.top",
+      "enabled": false
+    }
+  ],
+  "cacheEnabled": true,
+  "cacheMaxMB": 500,
+  "cacheDir": "./.cache",
+  "dnsPrefetch": true,
+  "autoAim": false,
+  "autoFire": false,
+  "autoDodge": false,
+  "autoCollect": false,
+  "autoFireRange": 400,
+  "autoDodgeRange": 300,
+  "autoCollectRange": 600,
+  "multiAccountEnabled": false,
+  "accounts": [],
+  "keepLogin": true,
+  "keepLoginInterval": 300,
+  "tcpNoDelay": true,
+  "keepAlive": true,
+  "connectionPool": 12,
+  "prefetchOnStart": true,
+  "dashboardEnabled": true,
+  "overlayEnabled": false,
+  "setupDone": true
+}
