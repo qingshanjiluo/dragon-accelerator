@@ -1,0 +1,14 @@
+{
+  "name": "dragon-accelerator-android",
+  "version": "5.0.0",
+  "description": "龙之归宿加速器 — Android 版",
+  "scripts": {
+    "build": "npx cap sync && cd android && ./gradlew assembleDebug",
+    "build:release": "npx cap sync && cd android && ./gradlew assembleRelease"
+  },
+  "dependencies": {
+    "@capacitor/android": "^5.0.0",
+    "@capacitor/core": "^5.0.0",
+    "@capacitor/cli": "^5.0.0"
+  }
+}

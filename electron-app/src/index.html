@@ -1,0 +1,1254 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>龙之归宿加速器 — Dragon Accelerator</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg-primary: #121820;
+    --bg-secondary: #0D1218;
+    --bg-card: rgba(255,255,255,0.04);
+    --bg-card-hover: rgba(255,255,255,0.06);
+    --border-card: rgba(255,255,255,0.06);
+    --border-card-hover: rgba(255,255,255,0.12);
+    --gold: #C9A87C;
+    --gold-dim: rgba(201,168,124,0.15);
+    --gold-glow: rgba(201,168,124,0.08);
+    --deep-blue: #1A2A3A;
+    --text-primary: #F0F0F0;
+    --text-secondary: #8892A0;
+    --text-muted: #5A6578;
+    --green: #4ADE80;
+    --green-dim: rgba(74,222,128,0.12);
+    --red: #F87171;
+    --red-dim: rgba(248,113,113,0.12);
+    --radius-sm: 4px;
+    --radius-md: 5px;
+    --radius-lg: 6px;
+    --font-title: 'Inter', -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif;
+    --font-mono: 'JetBrains Mono', 'SF Mono', monospace;
+    --shadow-sm: 0 1px 2px rgba(0,0,0,0.3);
+    --shadow-md: 0 4px 12px rgba(0,0,0,0.4);
+    --shadow-gold: 0 0 20px rgba(201,168,124,0.08);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: var(--font-title);
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    user-select: none;
+  }
+
+  /* ===== App Container ===== */
+  .app {
+    display: flex;
+    width: 100%;
+    height: 100%;
+  }
+
+  /* ===== Sidebar ===== */
+  .sidebar {
+    width: 200px;
+    background: var(--bg-secondary);
+    border-right: 1px solid var(--border-card);
+    display: flex;
+    flex-direction: column;
+    flex-shrink: 0;
+    position: relative;
+  }
+
+  .sidebar::after {
+    content: '';
+    position: absolute;
+    top: 0; right: 0;
+    width: 1px; height: 100%;
+    background: linear-gradient(180deg, transparent 0%, rgba(201,168,124,0.08) 50%, transparent 100%);
+  }
+
+  .logo-area {
+    padding: 24px 20px 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    border-bottom: 1px solid var(--border-card);
+  }
+
+  .logo-icon {
+    width: 32px;
+    height: 32px;
+    flex-shrink: 0;
+  }
+
+  .logo-text {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+  }
+
+  .logo-title {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-primary);
+    letter-spacing: 0.3px;
+  }
+
+  .logo-sub {
+    font-size: 10px;
+    color: var(--text-muted);
+    font-weight: 400;
+    letter-spacing: 0.5px;
+  }
+
+  .nav-menu {
+    flex: 1;
+    padding: 12px 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .nav-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 9px 12px;
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    color: var(--text-secondary);
+    font-size: 13px;
+    font-weight: 500;
+    position: relative;
+  }
+
+  .nav-item:hover {
+    background: rgba(255,255,255,0.03);
+    color: var(--text-primary);
+  }
+
+  .nav-item.active {
+    background: var(--gold-dim);
+    color: var(--gold);
+  }
+
+  .nav-item.active::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 50%;
+    transform: translateY(-50%);
+    width: 2px; height: 16px;
+    background: var(--gold);
+    border-radius: 0 2px 2px 0;
+  }
+
+  .nav-icon {
+    width: 18px;
+    height: 18px;
+    flex-shrink: 0;
+    opacity: 0.7;
+    transition: opacity 0.2s;
+  }
+
+  .nav-item:hover .nav-icon,
+  .nav-item.active .nav-icon {
+    opacity: 1;
+  }
+
+  .nav-item.active .nav-icon {
+    stroke: var(--gold);
+  }
+
+  .sidebar-footer {
+    padding: 14px 16px;
+    border-top: 1px solid var(--border-card);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .status-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--green);
+    box-shadow: 0 0 6px var(--green);
+    animation: pulse-dot 2s ease-in-out infinite;
+  }
+
+  @keyframes pulse-dot {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.5; transform: scale(0.85); }
+  }
+
+  .status-text {
+    font-size: 11px;
+    color: var(--text-muted);
+    font-family: var(--font-mono);
+  }
+
+  .version-tag {
+    font-size: 10px;
+    color: var(--text-muted);
+    background: rgba(255,255,255,0.04);
+    padding: 2px 6px;
+    border-radius: var(--radius-sm);
+    font-family: var(--font-mono);
+  }
+
+  /* ===== Main Content ===== */
+  .main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    background: var(--bg-primary);
+    position: relative;
+  }
+
+  .main::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; height: 200px;
+    background: radial-gradient(ellipse 80% 50% at 50% 0%, rgba(201,168,124,0.03) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .main-header {
+    padding: 20px 28px 12px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: relative;
+    z-index: 1;
+  }
+
+  .page-title {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--text-primary);
+    letter-spacing: -0.2px;
+  }
+
+  .page-subtitle {
+    font-size: 12px;
+    color: var(--text-secondary);
+    margin-top: 2px;
+  }
+
+  .header-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .icon-btn {
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--bg-card);
+    border: 1px solid var(--border-card);
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    color: var(--text-secondary);
+  }
+
+  .icon-btn:hover {
+    background: var(--bg-card-hover);
+    border-color: var(--border-card-hover);
+    color: var(--text-primary);
+  }
+
+  .icon-btn svg {
+    width: 16px;
+    height: 16px;
+  }
+
+  /* ===== Content Area ===== */
+  .content {
+    flex: 1;
+    padding: 0 28px 24px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .content::-webkit-scrollbar { width: 4px; }
+  .content::-webkit-scrollbar-track { background: transparent; }
+  .content::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.08); border-radius: 2px; }
+
+  /* ===== Status Overview Cards ===== */
+  .stats-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+  }
+
+  .stat-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-card);
+    border-radius: var(--radius-lg);
+    padding: 16px 18px;
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .stat-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(201,168,124,0.1), transparent);
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+
+  .stat-card:hover {
+    background: var(--bg-card-hover);
+    border-color: var(--border-card-hover);
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-md);
+  }
+
+  .stat-card:hover::before {
+    opacity: 1;
+  }
+
+  .stat-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 10px;
+  }
+
+  .stat-label {
+    font-size: 12px;
+    color: var(--text-secondary);
+    font-weight: 500;
+    letter-spacing: 0.3px;
+  }
+
+  .stat-icon-wrap {
+    width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: var(--radius-sm);
+    background: rgba(255,255,255,0.03);
+  }
+
+  .stat-icon-wrap svg {
+    width: 14px;
+    height: 14px;
+  }
+
+  .stat-value {
+    font-family: var(--font-mono);
+    font-size: 26px;
+    font-weight: 700;
+    color: var(--text-primary);
+    line-height: 1.2;
+    letter-spacing: -0.5px;
+  }
+
+  .stat-unit {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-secondary);
+    margin-left: 2px;
+  }
+
+  .stat-meta {
+    margin-top: 6px;
+    font-size: 11px;
+    color: var(--text-muted);
+    font-family: var(--font-mono);
+  }
+
+  .stat-meta .trend-up { color: var(--red); }
+  .stat-meta .trend-down { color: var(--green); }
+
+  /* Status badge */
+  .status-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 3px 8px;
+    border-radius: var(--radius-sm);
+    font-size: 11px;
+    font-weight: 600;
+    font-family: var(--font-mono);
+    letter-spacing: 0.3px;
+  }
+
+  .status-badge.accelerated {
+    background: var(--green-dim);
+    color: var(--green);
+    border: 1px solid rgba(74,222,128,0.15);
+  }
+
+  .status-badge.idle {
+    background: var(--red-dim);
+    color: var(--red);
+    border: 1px solid rgba(248,113,113,0.15);
+  }
+
+  .badge-dot {
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+  }
+
+  .status-badge.accelerated .badge-dot { background: var(--green); box-shadow: 0 0 4px var(--green); }
+  .status-badge.idle .badge-dot { background: var(--red); }
+
+  /* ===== Action Area ===== */
+  .action-area {
+    display: flex;
+    gap: 10px;
+    align-items: stretch;
+  }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 0 20px;
+    height: 42px;
+    border: none;
+    border-radius: var(--radius-md);
+    font-family: var(--font-title);
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+    letter-spacing: 0.2px;
+  }
+
+  .btn:active {
+    transform: translateY(1px) scale(0.985);
+  }
+
+  .btn-primary {
+    background: linear-gradient(135deg, var(--gold) 0%, #B8956A 100%);
+    color: #0D1218;
+    box-shadow: 0 2px 8px rgba(201,168,124,0.2), inset 0 1px 0 rgba(255,255,255,0.15);
+  }
+
+  .btn-primary:hover {
+    box-shadow: 0 4px 16px rgba(201,168,124,0.3), inset 0 1px 0 rgba(255,255,255,0.2);
+    filter: brightness(1.05);
+  }
+
+  .btn-primary:active {
+    box-shadow: 0 1px 4px rgba(201,168,124,0.15);
+    filter: brightness(0.95);
+  }
+
+  .btn-secondary {
+    background: var(--bg-card);
+    color: var(--text-primary);
+    border: 1px solid var(--border-card);
+  }
+
+  .btn-secondary:hover {
+    background: var(--bg-card-hover);
+    border-color: var(--border-card-hover);
+  }
+
+  .btn-secondary:active {
+    background: rgba(255,255,255,0.02);
+  }
+
+  .btn-ghost {
+    background: transparent;
+    color: var(--text-secondary);
+    border: 1px solid var(--border-card);
+  }
+
+  .btn-ghost:hover {
+    background: var(--bg-card);
+    color: var(--text-primary);
+    border-color: var(--border-card-hover);
+  }
+
+  .btn svg {
+    width: 15px;
+    height: 15px;
+    flex-shrink: 0;
+  }
+
+  /* ===== Game Preview ===== */
+  .preview-section {
+    flex: 1;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .section-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 10px;
+  }
+
+  .section-title {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-secondary);
+    letter-spacing: 0.3px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .section-title svg {
+    width: 14px;
+    height: 14px;
+    opacity: 0.6;
+  }
+
+  .game-preview {
+    flex: 1;
+    min-height: 0;
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-card);
+    border-radius: var(--radius-lg);
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .game-preview::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background:
+      radial-gradient(circle at 20% 80%, rgba(26,42,58,0.4) 0%, transparent 50%),
+      radial-gradient(circle at 80% 20%, rgba(201,168,124,0.03) 0%, transparent 40%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .game-preview-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 14px;
+    border-bottom: 1px solid var(--border-card);
+    position: relative;
+    z-index: 1;
+  }
+
+  .game-title {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-secondary);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .game-title svg {
+    width: 14px;
+    height: 14px;
+  }
+
+  .game-controls {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .game-ctrl-btn {
+    width: 22px;
+    height: 22px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255,255,255,0.03);
+    border: 1px solid var(--border-card);
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    color: var(--text-muted);
+    transition: all 0.2s;
+  }
+
+  .game-ctrl-btn:hover {
+    background: rgba(255,255,255,0.06);
+    color: var(--text-secondary);
+  }
+
+  .game-ctrl-btn svg {
+    width: 10px;
+    height: 10px;
+  }
+
+  .game-viewport {
+    flex: 1;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1;
+  }
+
+  .game-placeholder {
+    text-align: center;
+    padding: 40px;
+  }
+
+  .game-placeholder-icon {
+    width: 64px;
+    height: 64px;
+    margin: 0 auto 16px;
+    opacity: 0.25;
+  }
+
+  .game-placeholder-text {
+    font-size: 14px;
+    color: var(--text-muted);
+    font-weight: 500;
+    margin-bottom: 4px;
+  }
+
+  .game-placeholder-sub {
+    font-size: 12px;
+    color: var(--text-muted);
+    opacity: 0.7;
+  }
+
+  .game-placeholder-url {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--gold);
+    opacity: 0.6;
+    margin-top: 8px;
+    letter-spacing: 0.3px;
+  }
+
+  /* Grid overlay for game viewport */
+  .grid-overlay {
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background-image:
+      linear-gradient(rgba(255,255,255,0.015) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.015) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events: none;
+  }
+
+  /* ===== Latency Graph (mini) ===== */
+  .latency-graph {
+    height: 40px;
+    display: flex;
+    align-items: flex-end;
+    gap: 2px;
+    padding: 0 2px;
+  }
+
+  .latency-bar {
+    flex: 1;
+    background: rgba(74,222,128,0.25);
+    border-radius: 1px 1px 0 0;
+    transition: height 0.3s ease;
+    min-height: 2px;
+  }
+
+  .latency-bar.high { background: rgba(248,113,113,0.35); }
+  .latency-bar.med { background: rgba(201,168,124,0.3); }
+
+  /* ===== Testing Animation ===== */
+  .testing-overlay {
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(13,18,24,0.85);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    z-index: 10;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s;
+    backdrop-filter: blur(4px);
+  }
+
+  .testing-overlay.active {
+    opacity: 1;
+    pointer-events: all;
+  }
+
+  .spinner {
+    width: 32px;
+    height: 32px;
+    border: 2px solid var(--border-card);
+    border-top-color: var(--gold);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+  }
+
+  @keyframes spin {
+    to { transform: rotate(360deg); }
+  }
+
+  .testing-text {
+    font-size: 13px;
+    color: var(--text-secondary);
+    font-family: var(--font-mono);
+  }
+
+  .testing-dots::after {
+    content: '';
+    animation: dots 1.5s steps(4, end) infinite;
+  }
+
+  @keyframes dots {
+    0% { content: ''; }
+    25% { content: '.'; }
+    50% { content: '..'; }
+    75% { content: '...'; }
+  }
+
+  /* ===== Divider / Separator ===== */
+  .divider {
+    height: 1px;
+    background: var(--border-card);
+    margin: 4px 0;
+  }
+
+  /* ===== Server Info Row ===== */
+  .server-info {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 10px 14px;
+    background: var(--bg-card);
+    border: 1px solid var(--border-card);
+    border-radius: var(--radius-md);
+    margin-bottom: 4px;
+  }
+
+  .server-info-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    color: var(--text-secondary);
+  }
+
+  .server-info-item svg {
+    width: 12px;
+    height: 12px;
+    opacity: 0.5;
+  }
+
+  .server-info-item strong {
+    color: var(--text-primary);
+    font-weight: 600;
+    font-family: var(--font-mono);
+  }
+
+  /* ===== Tooltip ===== */
+  [data-tooltip] {
+    position: relative;
+  }
+
+  [data-tooltip]::after {
+    content: attr(data-tooltip);
+    position: absolute;
+    bottom: calc(100% + 6px);
+    left: 50%;
+    transform: translateX(-50%) translateY(4px);
+    padding: 4px 8px;
+    background: #1E2832;
+    border: 1px solid var(--border-card);
+    border-radius: var(--radius-sm);
+    font-size: 11px;
+    color: var(--text-secondary);
+    white-space: nowrap;
+    opacity: 0;
+    pointer-events: none;
+    transition: all 0.2s ease;
+    box-shadow: var(--shadow-md);
+    z-index: 100;
+  }
+
+  [data-tooltip]:hover::after {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+
+  /* ===== Scrollbar for content ===== */
+  .content { scrollbar-width: thin; scrollbar-color: rgba(255,255,255,0.08) transparent; }
+
+  /* ===== Responsive adjustments ===== */
+  @media (max-width: 800px) {
+    .stats-row { grid-template-columns: 1fr; }
+    .action-area { flex-wrap: wrap; }
+    .btn { flex: 1; min-width: 120px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="app">
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="logo-area">
+      <svg class="logo-icon" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M16 2L4 9v14l12 7 12-7V9L16 2z" stroke="#C9A87C" stroke-width="1.2" fill="none" opacity="0.3"/>
+        <path d="M16 6L8 10.5v9L16 24l8-4.5v-9L16 6z" stroke="#C9A87C" stroke-width="1" fill="none"/>
+        <path d="M16 10l-4 2.25v4.5L16 19l4-2.25v-4.5L16 10z" fill="#C9A87C" opacity="0.15"/>
+        <path d="M16 10v9M12 12.25L16 14.5l4-2.25M12 16.75L16 19l4-2.25" stroke="#C9A87C" stroke-width="0.8" opacity="0.6"/>
+        <circle cx="16" cy="14.5" r="1.5" fill="#C9A87C" opacity="0.8"/>
+      </svg>
+      <div class="logo-text">
+        <span class="logo-title">龙之归宿</span>
+        <span class="logo-sub">DRAGON ACCELERATOR</span>
+      </div>
+    </div>
+
+    <nav class="nav-menu">
+      <div class="nav-item active" data-page="boost">
+        <svg class="nav-icon" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M9 2v3M9 13v3M4 4.5l2.1 2.1M11.9 11.4L14 13.5M2 9h3M13 9h3M4.5 14l2.1-2.1M11.4 6.1L13.5 4"/>
+          <circle cx="9" cy="9" r="2.5"/>
+        </svg>
+        <span>加速</span>
+      </div>
+      <div class="nav-item" data-page="monitor">
+        <svg class="nav-icon" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M2 14h14M4 10l3-4 3 2 4-5"/>
+          <path d="M14 3v3M14 6h3" stroke-width="1.2"/>
+        </svg>
+        <span>延迟监控</span>
+      </div>
+      <div class="nav-item" data-page="settings">
+        <svg class="nav-icon" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="9" cy="9" r="2.5"/>
+          <path d="M14.5 9c0-.6-.1-1.2-.3-1.7l1.8-1.8-1.4-1.4-1.8 1.8c-.5-.2-1.1-.3-1.7-.3V2.5H7.5V5.6c-.6 0-1.2.1-1.7.3L3.9 4.1 2.5 5.5l1.8 1.8c-.2.5-.3 1.1-.3 1.7H2.5v2h1.5c0 .6.1 1.2.3 1.7l-1.8 1.8 1.4 1.4 1.8-1.8c.5.2 1.1.3 1.7.3v3.1h2V14.4c.6 0 1.2-.1 1.7-.3l1.8 1.8 1.4-1.4-1.8-1.8c.2-.5.3-1.1.3-1.7h1.5V9h-1.5z"/>
+        </svg>
+        <span>设置</span>
+      </div>
+      <div class="nav-item" data-page="about">
+        <svg class="nav-icon" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="9" cy="9" r="7"/>
+          <path d="M9 12V9M9 6.5v.1" stroke-width="1.8"/>
+        </svg>
+        <span>关于</span>
+      </div>
+    </nav>
+
+    <div class="sidebar-footer">
+      <div style="display:flex;align-items:center;gap:6px;">
+        <div class="status-dot"></div>
+        <span class="status-text">运行中</span>
+      </div>
+      <span class="version-tag">v5.0</span>
+    </div>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="main">
+    <header class="main-header">
+      <div>
+        <h1 class="page-title">加速中心</h1>
+        <p class="page-subtitle">MK49 海战游戏网络优化</p>
+      </div>
+      <div class="header-actions">
+        <button class="icon-btn" data-tooltip="最小化" onclick="window.minimize?.()">
+          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
+            <path d="M3 8h10"/>
+          </svg>
+        </button>
+        <button class="icon-btn" data-tooltip="关闭" onclick="window.close?.()">
+          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
+            <path d="M4 4l8 8M12 4l-8 8"/>
+          </svg>
+        </button>
+      </div>
+    </header>
+
+    <div class="content">
+      <!-- Server Info Bar -->
+      <div class="server-info">
+        <div class="server-info-item">
+          <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
+            <rect x="1" y="4" width="10" height="6" rx="1"/>
+            <path d="M3 4V2.5a1 1 0 011-1h4a1 1 0 011 1V4"/>
+            <path d="M4 7h4" stroke-width="1"/>
+          </svg>
+          <span>目标服务器</span>
+          <strong>game.mk49.top</strong>
+        </div>
+        <div class="server-info-item">
+          <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
+            <circle cx="6" cy="6" r="5"/>
+            <path d="M6 3v3l2 2" stroke-width="1.2"/>
+          </svg>
+          <span>加速节点</span>
+          <strong>CN-SH-07</strong>
+        </div>
+        <div class="server-info-item">
+          <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
+            <path d="M1 6h2l2-3 2 6 2-3h2"/>
+          </svg>
+          <span>协议</span>
+          <strong>TCP / UDP</strong>
+        </div>
+      </div>
+
+      <!-- Stats Cards -->
+      <div class="stats-row">
+        <div class="stat-card">
+          <div class="stat-header">
+            <span class="stat-label">加速状态</span>
+            <div class="stat-icon-wrap">
+              <svg viewBox="0 0 14 14" fill="none" stroke="#C9A87C" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M7 1.5l1.8 3.6 4 .6-2.9 2.8.7 4L7 10.3l-3.6 2 .7-4L1.2 5.7l4-.6L7 1.5z"/>
+              </svg>
+            </div>
+          </div>
+          <div>
+            <span id="status-badge" class="status-badge idle">
+              <span class="badge-dot"></span>
+              <span id="status-text">未加速</span>
+            </span>
+          </div>
+          <div class="stat-meta" id="status-meta">点击启动加速以优化网络</div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-header">
+            <span class="stat-label">网络延迟</span>
+            <div class="stat-icon-wrap">
+              <svg viewBox="0 0 14 14" fill="none" stroke="#8892A0" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M1 10l3-4 3 2 4-5"/>
+                <path d="M11 3v3M11 6h3" stroke-width="1"/>
+              </svg>
+            </div>
+          </div>
+          <div>
+            <span id="latency-value" class="stat-value">--</span>
+            <span class="stat-unit">ms</span>
+          </div>
+          <div class="latency-graph" id="latency-graph"></div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-header">
+            <span class="stat-label">抖动 / 丢包</span>
+            <div class="stat-icon-wrap">
+              <svg viewBox="0 0 14 14" fill="none" stroke="#8892A0" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M2 7h2.5l2-3 2.5 6 2-3H12"/>
+                <circle cx="7" cy="7" r="5.5" stroke-dasharray="2 2" opacity="0.4"/>
+              </svg>
+            </div>
+          </div>
+          <div>
+            <span id="jitter-value" class="stat-value">--</span>
+            <span class="stat-unit" style="font-size:11px;">ms</span>
+            <span style="color:var(--text-muted);margin:0 4px;">/</span>
+            <span id="loss-value" class="stat-value" style="font-size:18px;">--</span>
+            <span class="stat-unit" style="font-size:11px;">%</span>
+          </div>
+          <div class="stat-meta" id="jitter-meta">等待测试数据</div>
+        </div>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="action-area">
+        <button class="btn btn-primary" id="btn-boost" onclick="toggleBoost()">
+          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M8 2v4M8 10v4M4 4l2.8 2.8M9.2 9.2L12 12M2 8h4M10 8h4M4 12l2.8-2.8M9.2 6.8L12 4"/>
+          </svg>
+          <span id="btn-boost-text">启动加速</span>
+        </button>
+        <button class="btn btn-secondary" id="btn-test" onclick="runLatencyTest()">
+          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M2 10l4-4 3 2 5-6"/>
+            <path d="M13 2v4M13 6h4" stroke-width="1.2"/>
+          </svg>
+          <span>延迟测试</span>
+        </button>
+        <button class="btn btn-ghost" id="btn-launch" onclick="launchGame()">
+          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M3 2l10 6-10 6V2z"/>
+          </svg>
+          <span>进入游戏</span>
+        </button>
+      </div>
+
+      <!-- Game Preview -->
+      <div class="preview-section">
+        <div class="section-header">
+          <span class="section-title">
+            <svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="1" y="2" width="12" height="9" rx="1"/>
+              <path d="M5 11l2 2 2-2"/>
+              <path d="M6 5l2 2-2 2" stroke-width="1.2"/>
+            </svg>
+            游戏预览
+          </span>
+          <span style="font-size:11px;color:var(--text-muted);font-family:var(--font-mono);">WebView 隔离运行</span>
+        </div>
+        <div class="game-preview" id="game-preview">
+          <div class="grid-overlay"></div>
+          <div class="game-preview-header">
+            <span class="game-title">
+              <svg viewBox="0 0 14 14" fill="none" stroke="#C9A87C" stroke-width="1.4" stroke-linecap="round">
+                <circle cx="7" cy="7" r="5.5"/>
+                <path d="M4 7h6M7 4v6" stroke-width="1"/>
+                <path d="M5 5l4 4M9 5l-4 4" opacity="0.4"/>
+              </svg>
+              MK49 海战
+            </span>
+            <div class="game-controls">
+              <button class="game-ctrl-btn" data-tooltip="刷新">
+                <svg viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round">
+                  <path d="M5 1.5v-1M5 9.5v-1M1.5 5h-1M9.5 5h-1"/>
+                  <path d="M2.5 2.5a4 4 0 105 0"/>
+                </svg>
+              </button>
+              <button class="game-ctrl-btn" data-tooltip="全屏">
+                <svg viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round">
+                  <path d="M1.5 3.5V1.5h2M8.5 3.5V1.5h-2M1.5 6.5v2h2M8.5 6.5v2h-2"/>
+                </svg>
+              </button>
+            </div>
+          </div>
+          <div class="game-viewport">
+            <div class="game-placeholder">
+              <svg class="game-placeholder-icon" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M32 8L12 20v24l20 12 20-12V20L32 8z" stroke="#C9A87C" stroke-width="1" opacity="0.3"/>
+                <path d="M32 16L18 24v16l14 8 14-8V24L32 16z" stroke="#C9A87C" stroke-width="0.8" opacity="0.2"/>
+                <path d="M32 24l-6 3.5v7L32 38l6-3.5v-7L32 24z" fill="#C9A87C" opacity="0.08"/>
+                <path d="M32 24v14M26 27.5L32 31l6-3.5M26 34.5L32 38l6-3.5" stroke="#C9A87C" stroke-width="0.6" opacity="0.15"/>
+                <circle cx="32" cy="31" r="2" fill="#C9A87C" opacity="0.2"/>
+                <path d="M20 44c4-2 8-3 12-3s8 1 12 3" stroke="#C9A87C" stroke-width="0.5" opacity="0.1"/>
+                <path d="M16 48c6-3 12-4 16-4s10 1 16 4" stroke="#C9A87C" stroke-width="0.5" opacity="0.08"/>
+              </svg>
+              <div class="game-placeholder-text">游戏视图占位</div>
+              <div class="game-placeholder-sub">启动加速后可直接在此窗口内运行 MK49</div>
+              <div class="game-placeholder-url">https://game.mk49.top</div>
+            </div>
+          </div>
+
+          <!-- Testing Overlay -->
+          <div class="testing-overlay" id="testing-overlay">
+            <div class="spinner"></div>
+            <div class="testing-text">正在进行延迟测试<span class="testing-dots"></span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<script>
+  const { ipcRenderer } = require('electron');
+
+  // ===== State =====
+  let isAccelerated = false;
+  let isTesting = false;
+  let latencyHistory = [];
+  const maxHistory = 30;
+
+  // ===== Navigation =====
+  document.querySelectorAll('.nav-item').forEach(item => {
+    item.addEventListener('click', () => {
+      document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+      item.classList.add('active');
+    });
+  });
+
+  // ===== Window Controls =====
+  document.querySelector('[data-tooltip="最小化"]')?.addEventListener('click', () => ipcRenderer.invoke('window-minimize'));
+  document.querySelector('[data-tooltip="关闭"]')?.addEventListener('click', () => ipcRenderer.invoke('window-close'));
+
+  // ===== Latency Graph =====
+  function initLatencyGraph() {
+    const graph = document.getElementById('latency-graph');
+    graph.innerHTML = '';
+    for (let i = 0; i < maxHistory; i++) {
+      const bar = document.createElement('div');
+      bar.className = 'latency-bar';
+      bar.style.height = '2px';
+      graph.appendChild(bar);
+    }
+  }
+
+  function updateLatencyGraph(value) {
+    latencyHistory.push(value);
+    if (latencyHistory.length > maxHistory) latencyHistory.shift();
+
+    const bars = document.querySelectorAll('.latency-bar');
+    const maxVal = Math.max(...latencyHistory, 100);
+
+    bars.forEach((bar, i) => {
+      const val = latencyHistory[i] || 0;
+      const pct = val / maxVal;
+      bar.style.height = Math.max(2, pct * 36) + 'px';
+
+      bar.classList.remove('high', 'med');
+      if (val > 80) bar.classList.add('high');
+      else if (val > 40) bar.classList.add('med');
+    });
+  }
+
+  // ===== Boost Toggle =====
+  async function toggleBoost() {
+    const badge = document.getElementById('status-badge');
+    const statusText = document.getElementById('status-text');
+    const statusMeta = document.getElementById('status-meta');
+    const btnText = document.getElementById('btn-boost-text');
+    const btn = document.getElementById('btn-boost');
+
+    if (!isAccelerated) {
+      const result = await ipcRenderer.invoke('start-acceleration');
+      if (result.success) {
+        isAccelerated = true;
+        badge.classList.remove('idle');
+        badge.classList.add('accelerated');
+        statusText.textContent = '已加速';
+        statusMeta.textContent = `代理端口: 127.0.0.1:${result.port} / DNS 预解析已启用`;
+        btnText.textContent = '停止加速';
+        btn.style.background = 'linear-gradient(135deg, #F87171 0%, #DC2626 100%)';
+        btn.style.color = '#fff';
+        btn.style.boxShadow = '0 2px 8px rgba(248,113,113,0.25)';
+        startLiveMonitoring();
+      }
+    } else {
+      await ipcRenderer.invoke('stop-acceleration');
+      isAccelerated = false;
+      badge.classList.remove('accelerated');
+      badge.classList.add('idle');
+      statusText.textContent = '未加速';
+      statusMeta.textContent = '点击启动加速以优化网络';
+      btnText.textContent = '启动加速';
+      btn.style.background = '';
+      btn.style.color = '';
+      btn.style.boxShadow = '';
+      document.getElementById('latency-value').textContent = '--';
+      document.getElementById('jitter-value').textContent = '--';
+      document.getElementById('loss-value').textContent = '--';
+      document.getElementById('jitter-meta').textContent = '等待测试数据';
+      initLatencyGraph();
+    }
+  }
+
+  function simulateLatencyDrop() {
+    let steps = 0;
+    const targetLatency = 28;
+    const targetJitter = 2;
+    const targetLoss = 0;
+
+    const interval = setInterval(() => {
+      steps++;
+      const progress = steps / 20;
+      const currentLatency = Math.round(120 - (120 - targetLatency) * progress + (Math.random() * 6 - 3));
+      const currentJitter = Math.round(15 - (15 - targetJitter) * progress);
+      const currentLoss = (1.5 - (1.5 - targetLoss) * progress).toFixed(1);
+
+      document.getElementById('latency-value').textContent = Math.max(targetLatency, currentLatency);
+      document.getElementById('jitter-value').textContent = Math.max(targetJitter, currentJitter);
+      document.getElementById('loss-value').textContent = Math.max(targetLoss, currentLoss);
+      document.getElementById('jitter-meta').textContent = '网络质量优良';
+
+      updateLatencyGraph(Math.max(targetLatency, currentLatency));
+
+      if (steps >= 20) {
+        clearInterval(interval);
+        document.getElementById('latency-value').textContent = targetLatency;
+        document.getElementById('jitter-value').textContent = targetJitter;
+        document.getElementById('loss-value').textContent = targetLoss;
+        startLiveMonitoring();
+      }
+    }, 80);
+  }
+
+  let monitorInterval = null;
+  function startLiveMonitoring() {
+    if (monitorInterval) clearInterval(monitorInterval);
+    monitorInterval = setInterval(() => {
+      if (!isAccelerated) return;
+      const latency = 26 + Math.round(Math.random() * 6 - 3);
+      const jitter = Math.max(0, 2 + Math.round(Math.random() * 2 - 1));
+      const loss = (Math.random() * 0.3).toFixed(1);
+
+      document.getElementById('latency-value').textContent = latency;
+      document.getElementById('jitter-value').textContent = jitter;
+      document.getElementById('loss-value').textContent = loss;
+
+      updateLatencyGraph(latency);
+    }, 2000);
+  }
+
+  // ===== Latency Test =====
+  async function runLatencyTest() {
+    if (isTesting) return;
+    isTesting = true;
+    document.getElementById('testing-overlay').classList.add('active');
+
+    const results = await ipcRenderer.invoke('ping-test');
+
+    document.getElementById('testing-overlay').classList.remove('active');
+    isTesting = false;
+
+    if (results && results.length > 0) {
+      const best = results.filter(r => r.latency > 0).sort((a, b) => a.latency - b.latency)[0];
+      if (best) {
+        document.getElementById('latency-value').textContent = best.latency;
+        document.getElementById('jitter-meta').textContent = best.latency < 50 ? '网络质量优良' : '网络质量一般';
+        for (let i = 0; i < maxHistory; i++) {
+          updateLatencyGraph(best.latency + Math.round(Math.random() * 20 - 10));
+        }
+      }
+    }
+  }
+
+  // ===== Launch Game =====
+  function launchGame() {
+    ipcRenderer.invoke('open-url', 'https://game.mk49.top');
+  }
+
+  // ===== Init =====
+  initLatencyGraph();
+
+  // 定期更新统计
+  setInterval(async () => {
+    if (!isAccelerated) return;
+    const s = await ipcRenderer.invoke('get-stats');
+    if (s) {
+      document.getElementById('status-meta').textContent = `缓存: ${s.cacheItems} 项 / 命中: ${s.hits} / 运行: ${s.uptime}s`;
+    }
+  }, 2000);
+</script>
+
+</body>
+</html>

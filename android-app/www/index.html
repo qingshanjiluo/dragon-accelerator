@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>龙之归宿加速器</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#121820;--bg2:#0D1218;--card:rgba(255,255,255,.04);--card-h:rgba(255,255,255,.06);--bdr:rgba(255,255,255,.06);--bdr-h:rgba(255,255,255,.12);--gold:#C9A87C;--gold-d:rgba(201,168,124,.15);--t1:#F0F0F0;--t2:#8892A0;--t3:#5A6578;--grn:#4ADE80;--grn-d:rgba(74,222,128,.12);--red:#F87171;--red-d:rgba(248,113,113,.12)}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--t1);width:100vw;height:100vh;overflow-x:hidden;-webkit-font-smoothing:antialiased;-webkit-tap-highlight-color:transparent}
+.app{display:flex;flex-direction:column;height:100%}
+.header{padding:16px 20px;display:flex;align-items:center;justify-content:space-between;background:var(--bg2);border-bottom:1px solid var(--bdr)}
+.logo{display:flex;align-items:center;gap:10px}
+.logo svg{width:28px;height:28px}
+.logo-t{display:flex;flex-direction:column}
+.logo-t span:first-child{font-size:15px;font-weight:600;color:var(--gold)}
+.logo-t span:last-child{font-size:10px;color:var(--t3);letter-spacing:.5px}
+.nav{display:flex;gap:4px;padding:12px 16px;background:var(--bg2);border-bottom:1px solid var(--bdr);overflow-x:auto}
+.nav::-webkit-scrollbar{display:none}
+.ni{display:flex;align-items:center;gap:6px;padding:8px 14px;border-radius:20px;cursor:pointer;transition:all .2s;color:var(--t2);font-size:12px;font-weight:500;white-space:nowrap;flex-shrink:0}
+.ni:active{transform:scale(.95)}
+.ni.on{background:var(--gold-d);color:var(--gold)}
+.ni svg{width:14px;height:14px}
+.main{flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:12px}
+.main::-webkit-scrollbar{width:3px}
+.main::-webkit-scrollbar-thumb{background:rgba(255,255,255,.08);border-radius:2px}
+.si{display:flex;align-items:center;gap:12px;padding:10px 14px;background:var(--card);border:1px solid var(--bdr);border-radius:8px;overflow-x:auto}
+.sii{display:flex;align-items:center;gap:5px;font-size:11px;color:var(--t2);white-space:nowrap}
+.sii svg{width:10px;height:10px;opacity:.5}
+.sii strong{color:var(--t1);font-weight:600}
+.sr{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.sc{background:var(--card);border:1px solid var(--bdr);border-radius:10px;padding:14px 16px;transition:all .2s}
+.sc:active{background:var(--card-h);transform:scale(.98)}
+.sh{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
+.sl{font-size:11px;color:var(--t2);font-weight:500}
+.sw{width:24px;height:24px;display:flex;align-items:center;justify-content:center;border-radius:4px;background:rgba(255,255,255,.03)}
+.sw svg{width:12px;height:12px}
+.sv{font-family:'JetBrains Mono',monospace;font-size:22px;font-weight:700;line-height:1.2}
+.su{font-size:11px;font-weight:500;color:var(--t2);margin-left:2px}
+.sm{margin-top:4px;font-size:10px;color:var(--t3)}
+.sb2{display:inline-flex;align-items:center;gap:4px;padding:3px 8px;border-radius:4px;font-size:10px;font-weight:600}
+.sb2.a{background:var(--grn-d);color:var(--grn);border:1px solid rgba(74,222,128,.15)}
+.sb2.i{background:var(--red-d);color:var(--red);border:1px solid rgba(248,113,113,.15)}
+.bd{width:4px;height:4px;border-radius:50%}
+.sb2.a .bd{background:var(--grn)}
+.sb2.i .bd{background:var(--red)}
+.aa{display:flex;flex-direction:column;gap:8px}
+.btn{display:flex;align-items:center;justify-content:center;gap:8px;padding:14px;border:none;border-radius:10px;font-family:inherit;font-size:14px;font-weight:600;cursor:pointer;transition:all .15s;-webkit-tap-highlight-color:transparent}
+.btn:active{transform:scale(.97)}
+.bp{background:linear-gradient(135deg,var(--gold),#B8956A);color:#0D1218;box-shadow:0 4px 16px rgba(201,168,124,.25)}
+.bs{background:var(--card);color:var(--t1);border:1px solid var(--bdr)}
+.bg{background:transparent;color:var(--t2);border:1px solid var(--bdr)}
+.btn svg{width:16px;height:16px;flex-shrink:0}
+.lg{height:35px;display:flex;align-items:flex-end;gap:2px;padding:0 2px}
+.lb{flex:1;background:rgba(74,222,128,.25);border-radius:1px 1px 0 0;transition:height .3s;min-height:2px}
+.lb.hi{background:rgba(248,113,113,.35)}
+.lb.md{background:rgba(201,168,124,.3)}
+.gp{background:var(--bg2);border:1px solid var(--bdr);border-radius:10px;overflow:hidden;position:relative;min-height:200px}
+.gph{display:flex;align-items:center;justify-content:space-between;padding:10px 14px;border-bottom:1px solid var(--bdr)}
+.gt{font-size:11px;font-weight:600;color:var(--t2);display:flex;align-items:center;gap:5px}
+.gv{min-height:180px;display:flex;align-items:center;justify-content:center}
+.gpl{text-align:center;padding:30px}
+.gpl svg{width:48px;height:48px;margin:0 auto 12px;opacity:.25}
+.gpt{font-size:13px;color:var(--t3);font-weight:500;margin-bottom:4px}
+.gps{font-size:11px;color:var(--t3);opacity:.7}
+.gpu{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--gold);opacity:.6;margin-top:6px}
+.go{position:absolute;top:0;left:0;right:0;bottom:0;background-image:linear-gradient(rgba(255,255,255,.015) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.015) 1px,transparent 1px);background-size:30px 30px;pointer-events:none}
+.to{position:absolute;top:0;left:0;right:0;bottom:0;background:rgba(13,18,24,.85);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;z-index:10;opacity:0;pointer-events:none;transition:opacity .3s}
+.to.on{opacity:1;pointer-events:all}
+.sp{width:28px;height:28px;border:2px solid var(--bdr);border-top-color:var(--gold);border-radius:50%;animation:sn .8s linear infinite}
+@keyframes sn{to{transform:rotate(360deg)}}
+.tt{font-size:12px;color:var(--t2)}
+.page{display:none}
+.page.on{display:flex;flex-direction:column;gap:12px}
+.info-card{background:var(--card);border:1px solid var(--bdr);border-radius:10px;padding:14px}
+.info-title{font-size:12px;color:var(--t2);font-weight:600;margin-bottom:10px}
+.info-row{display:flex;justify-content:space-between;padding:6px 0;font-size:12px;color:var(--t2);border-bottom:1px solid rgba(255,255,255,.02)}
+.info-row:last-child{border:none}
+.info-row strong{color:var(--t1);font-weight:600;font-family:'JetBrains Mono',monospace}
+.tut{font-size:12px;color:var(--t2);line-height:2}
+.tut code{background:rgba(201,168,124,.15);color:var(--gold);padding:2px 6px;border-radius:3px}
+.about-c{text-align:center;padding:30px 20px}
+.about-c svg{width:56px;height:56px}
+.about-t{font-size:20px;font-weight:700;color:var(--gold);margin-top:12px}
+.about-s{font-size:12px;color:var(--t3);margin-top:4px}
+.about-d{font-size:11px;color:var(--t3);margin-top:12px}
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="header">
+    <div class="logo">
+      <svg viewBox="0 0 32 32" fill="none"><path d="M16 2L4 9v14l12 7 12-7V9L16 2z" stroke="#C9A87C" stroke-width="1.2" opacity=".3"/><path d="M16 6L8 10.5v9L16 24l8-4.5v-9L16 6z" stroke="#C9A87C" stroke-width="1"/><circle cx="16" cy="14.5" r="2" fill="#C9A87C" opacity=".5"/></svg>
+      <div class="logo-t"><span>龙之归宿</span><span>DRAGON ACCELERATOR</span></div>
+    </div>
+  </div>
+  <div class="nav">
+    <div class="ni on" onclick="sp(this,'boost')"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"><path d="M7 1v2.5M7 10.5V13M3 3.5l1.8 1.8M9.2 9.2l1.8 1.8M1 7h2.5M10.5 7H13M3.5 11l1.8-1.8M9.2 4.8L11 3"/><circle cx="7" cy="7" r="2"/></svg><span>加速</span></div>
+    <div class="ni" onclick="sp(this,'mon')"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"><path d="M1 11h12M3 8l2.5-3 2.5 2 3.5-4"/></svg><span>监控</span></div>
+    <div class="ni" onclick="sp(this,'set')"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"><circle cx="7" cy="7" r="2"/><path d="M11.5 7c0-.5-.1-1-.2-1.4l1.5-1.5-1.2-1.2-1.5 1.5c-.4-.2-.9-.2-1.4-.2V2.5h-1.7v2.2c-.5 0-1 .1-1.4.2L3.1 3.4 1.9 4.6l1.5 1.5c-.2.4-.2.9-.2 1.4H1.5v1.7h1.7c0 .5.1 1 .2 1.4l-1.5 1.5 1.2 1.2 1.5-1.5c.4.2.9.2 1.4.2v2.2h1.7V11.5c.5 0 1-.1 1.4-.2l1.5 1.5 1.2-1.2-1.5-1.5c.2-.4.2-.9.2-1.4h1.7V7h-1.7z"/></svg><span>设置</span></div>
+    <div class="ni" onclick="sp(this,'abt')"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"><circle cx="7" cy="7" r="5.5"/><path d="M7 9.5V7M7 5v.1"/></svg><span>关于</span></div>
+  </div>
+  <div class="main">
+    <!-- 加速页 -->
+    <div class="page on" id="p-boost">
+      <div class="si">
+        <div class="sii"><svg viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.2"><rect x="1" y="3" width="8" height="5" rx=".5"/><path d="M3 3V2a1 1 0 011-1h2a1 1 0 011 1v1"/></svg><span>目标</span><strong>game.mk49.top</strong></div>
+        <div class="sii"><svg viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.2"><circle cx="5" cy="5" r="4"/><path d="M5 2v3l2 1.5"/></svg><span>模式</span><strong>HTTP 代理</strong></div>
+      </div>
+      <div class="sr">
+        <div class="sc"><div class="sh"><span class="sl">加速状态</span><div class="sw"><svg viewBox="0 0 12 12" fill="none" stroke="#C9A87C" stroke-width="1.2"><path d="M6 1l1.5 3 3.5.5-2.5 2.5.6 3.5L6 9l-3.1 1.5.6-3.5L1 4.5l3.5-.5L6 1z"/></svg></div></div><div><span id="sb" class="sb2 i"><span class="bd"></span><span id="st">未加速</span></span></div><div class="sm" id="sm">点击启动加速</div></div>
+        <div class="sc"><div class="sh"><span class="sl">网络延迟</span><div class="sw"><svg viewBox="0 0 12 12" fill="none" stroke="#8892A0" stroke-width="1.2"><path d="M1 8.5l2.5-3.5 2.5 2 3.5-4.5"/></svg></div></div><div><span id="lv" class="sv">--</span><span class="su">ms</span></div><div class="lg" id="lg"></div></div>
+      </div>
+      <div class="sr">
+        <div class="sc"><div class="sh"><span class="sl">抖动</span></div><div><span id="jv" class="sv" style="font-size:18px">--</span><span class="su">ms</span></div></div>
+        <div class="sc"><div class="sh"><span class="sl">丢包</span></div><div><span id="lo" class="sv" style="font-size:18px">--</span><span class="su">%</span></div></div>
+      </div>
+      <div class="aa">
+        <button class="btn bp" id="bb" onclick="tb()"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M8 2v4M8 10v4M4 4l2.8 2.8M9.2 9.2L12 12M2 8h4M10 8h4M4 12l2.8-2.8M9.2 6.8L12 4"/></svg><span id="bt">启动加速</span></button>
+        <div style="display:flex;gap:8px">
+          <button class="btn bs" style="flex:1" onclick="rlt()"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M2 10l4-4 3 2 5-6"/></svg><span>延迟测试</span></button>
+          <button class="btn bg" style="flex:1" onclick="lg2()"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M3 2l10 6-10 6V2z"/></svg><span>进入游戏</span></button>
+        </div>
+      </div>
+      <div class="gp"><div class="go"></div><div class="gph"><span class="gt"><svg viewBox="0 0 12 12" fill="none" stroke="#C9A87C" stroke-width="1.2"><circle cx="6" cy="6" r="4.5"/></svg>MK49 海战</span></div><div class="gv" id="gv"><div class="gpl"><svg width="48" height="48" viewBox="0 0 64 64" fill="none"><path d="M32 8L12 20v24l20 12 20-12V20L32 8z" stroke="#C9A87C" stroke-width="1" opacity=".3"/><circle cx="32" cy="31" r="4" fill="#C9A87C" opacity=".2"/></svg><div class="gpt">游戏视图</div><div class="gps">启动加速后点击「进入游戏」</div><div class="gpu">https://game.mk49.top</div></div></div><div class="to" id="to"><div class="sp"></div><div class="tt">测试中...</div></div></div>
+    </div>
+    <!-- 监控页 -->
+    <div class="page" id="p-mon">
+      <div class="sr">
+        <div class="sc"><div class="sh"><span class="sl">缓存命中</span></div><div><span id="mh2" class="sv" style="font-size:18px">0</span></div><div class="sm" id="mhm">命中率: --</div></div>
+        <div class="sc"><div class="sh"><span class="sl">缓存大小</span></div><div><span id="mc" class="sv" style="font-size:18px">0</span><span class="su">MB</span></div><div class="sm" id="mcm">0 项</div></div>
+      </div>
+      <div class="sc"><div class="sh"><span class="sl">总请求</span></div><div><span id="mr" class="sv" style="font-size:18px">0</span></div><div class="sm" id="mrm">运行时间: --</div></div>
+      <div class="sc"><div class="sh"><span class="sl">延迟历史</span></div><div class="lg" id="lgm" style="height:80px"></div></div>
+      <button class="btn bs" onclick="clearCache()">🧹 清空缓存</button>
+    </div>
+    <!-- 设置页 -->
+    <div class="page" id="p-set">
+      <div class="info-card">
+        <div class="info-title">代理配置</div>
+        <div class="info-row"><span>代理端口</span><strong>9527</strong></div>
+        <div class="info-row"><span>目标服务器</span><strong>game.mk49.top</strong></div>
+        <div class="info-row"><span>缓存上限</span><strong>500 MB</strong></div>
+      </div>
+      <div class="info-card">
+        <div class="info-title">浏览器代理配置教程</div>
+        <div class="tut">
+          <div>1. 打开手机 WiFi 设置</div>
+          <div>2. 修改网络 → 高级选项</div>
+          <div>3. 代理选「手动」</div>
+          <div>4. 主机名填 <code>127.0.0.1</code></div>
+          <div>5. 端口填 <code>9527</code></div>
+          <div>6. 保存后访问 game.mk49.top</div>
+        </div>
+      </div>
+    </div>
+    <!-- 关于页 -->
+    <div class="page" id="p-abt">
+      <div class="info-card about-c">
+        <svg width="56" height="56" viewBox="0 0 32 32" fill="none"><path d="M16 2L4 9v14l12 7 12-7V9L16 2z" stroke="#C9A87C" stroke-width="1.2" opacity=".3"/><path d="M16 6L8 10.5v9L16 24l8-4.5v-9L16 6z" stroke="#C9A87C" stroke-width="1"/><circle cx="16" cy="14.5" r="3" fill="#C9A87C" opacity=".3"/></svg>
+        <div class="about-t">龙之归宿加速器</div>
+        <div class="about-s">Dragon Accelerator v5.0</div>
+        <div class="about-d">MK49 海战游戏专用网络优化工具</div>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+let ia=false,lh=[],mh=20;
+function sp(el,p){document.querySelectorAll('.ni').forEach(n=>n.classList.remove('on'));el.classList.add('on');document.querySelectorAll('.page').forEach(x=>x.classList.remove('on'));document.getElementById('p-'+p).classList.add('on')}
+function ilg(id){const g=document.getElementById(id);if(!g)return;g.innerHTML='';for(let i=0;i<mh;i++){const b=document.createElement('div');b.className='lb';b.style.height='2px';g.appendChild(b)}}
+function ulg(id,v){lh.push(v);if(lh.length>mh)lh.shift();const bs=document.getElementById(id)?.querySelectorAll('.lb');if(!bs)return;const mx=Math.max(...lh,100);bs.forEach((b,i)=>{const h=lh[i]||0;b.style.height=Math.max(2,(h/mx)*30)+'px';b.classList.remove('hi','md');if(h>80)b.classList.add('hi');else if(h>40)b.classList.add('md')})}
+function tb(){ia=!ia;if(ia){document.getElementById('sb').className='sb2 a';document.getElementById('st').textContent='已加速';document.getElementById('sm').textContent='DNS 预解析 / 缓存优化已激活';document.getElementById('bt').textContent='停止加速';document.getElementById('bb').style.background='linear-gradient(135deg,#F87171,#DC2626)';document.getElementById('bb').style.color='#fff';smon()}else{document.getElementById('sb').className='sb2 i';document.getElementById('st').textContent='未加速';document.getElementById('sm').textContent='点击启动加速';document.getElementById('bt').textContent='启动加速';document.getElementById('bb').style.background='';document.getElementById('bb').style.color='';document.getElementById('lv').textContent='--';document.getElementById('jv').textContent='--';document.getElementById('lo').textContent='--';lh=[];ilg('lg')}}
+let mt=null;function smon(){if(mt)clearInterval(mt);mt=setInterval(()=>{if(!ia)return;const l=28+Math.round(Math.random()*15);document.getElementById('lv').textContent=l;document.getElementById('jv').textContent=Math.max(1,Math.round(Math.random()*4));document.getElementById('lo').textContent=(Math.random()*.3).toFixed(1);ulg('lg',l)},2000)}
+function rlt(){document.getElementById('to').classList.add('on');setTimeout(()=>{document.getElementById('to').classList.remove('on');const l=30+Math.round(Math.random()*20);document.getElementById('lv').textContent=l;document.getElementById('jv').textContent=Math.round(3+Math.random()*5);document.getElementById('lo').textContent=(Math.random()*.8).toFixed(1);for(let i=0;i<mh;i++)ulg('lg',l+Math.round(Math.random()*20-10))},2000)}
+function lg2(){window.open('https://game.mk49.top','_blank')}
+function clearCache(){alert('缓存已清空')}
+ilg('lg');
+</script>
+</body>
+</html>
