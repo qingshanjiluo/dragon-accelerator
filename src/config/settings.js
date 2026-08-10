@@ -16,6 +16,8 @@ const DEFAULTS = {
   multiAccountEnabled: false, accounts: [],
   keepLogin: true, keepLoginInterval: 300,
   smartDns: true, smartDnsInterval: 60,
+  activeGame: 'game.mk49.top',
+  autoProxy: false,
   setupDone: false
 };
 
@@ -25,7 +27,20 @@ class Settings {
   save() { try { fs.writeFileSync(CFG, JSON.stringify(this.config, null, 2)); } catch {} }
   get(k) { return this.config[k]; }
   set(k, v) { this.config[k] = v; this.save(); }
-  update(p) { Object.assign(this.config, p); this.save(); }
+  update(p) {
+    // 支持点路径写入，如 "games.0.enabled"
+    for (const [k, v] of Object.entries(p)) {
+      const parts = k.split('.');
+      let cur = this.config;
+      for (let i = 0; i < parts.length - 1; i++) {
+        const part = parts[i];
+        if (!cur[part] || typeof cur[part] !== 'object') cur[part] = /^\d+$/.test(parts[i + 1]) ? [] : {};
+        cur = cur[part];
+      }
+      cur[parts[parts.length - 1]] = v;
+    }
+    this.save();
+  }
   getAll() { return { ...this.config }; }
   getEnabledHosts() { return this.config.games.filter(g => g.enabled).map(g => g.host); }
   markSetupDone() { this.config.setupDone = true; this.save(); }

@@ -77,7 +77,7 @@ class NodeSelector {
     // 尝试用不同 DNS 服务器
     for (const dnsServer of this.dnsServers.slice(0, 2)) {
       try {
-        const output = execSync(`nslookup ${host} ${dnsServer} 2>/dev/null`, { timeout: 3000 }).toString();
+        const output = execSync(`nslookup ${host} ${dnsServer} 2>nul`, { timeout: 3000 }).toString();
         const matches = output.match(/Address:\s*(\d+\.\d+\.\d+\.\d+)/g);
         if (matches) {
           matches.forEach(m => {

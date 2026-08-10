@@ -1,7 +1,7 @@
 {
   "name": "mk49-dragon-accelerator",
-  "version": "5.0.0",
-  "description": "龙之归宿加速器 v5.0 — MITM + 智能DNS + 多开隔离 + 自动操作",
+  "version": "5.1.0",
+  "description": "龙之归宿加速器 v5.1 — MITM + 智能DNS + 多开隔离 + 系统代理 + 自动操作",
   "main": "src/main/cli.js",
   "scripts": {
     "start": "node src/main/cli.js",
@@ -10,8 +10,8 @@
   "author": "Dragon Home",
   "license": "MIT",
   "dependencies": {
-    "lru-cache": "^10.2.0",
+    "lru-cache": "^10.4.3",
     "puppeteer": "^25.5.0",
-    "ws": "^8.16.0"
+    "ws": "^8.21.3"
   }
 }

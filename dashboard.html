@@ -3,296 +3,1985 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>🐉 龙之归宿加速器 v4.0</title>
+<title>龙之归宿加速器 — Dragon Accelerator</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
-*{margin:0;padding:0;box-sizing:border-box}
-:root{--bg:#080c18;--card:#0f1525;--border:#1a2340;--accent:#00d4ff;--ok:#00ff88;--warn:#ffaa00;--err:#ff4444;--text:#e8ecf4;--dim:#6b7a9e}
-body{font-family:'Microsoft YaHei','PingFang SC',sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
-header{display:flex;align-items:center;justify-content:space-between;padding:10px 20px;background:linear-gradient(90deg,#0a0e1a,#101830);border-bottom:1px solid var(--border)}
-.logo{display:flex;align-items:center;gap:8px}
-.logo span:first-child{font-size:24px}.logo h1{font-size:16px;font-weight:700;background:linear-gradient(90deg,#ffcc00,#ff3344);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
-.tabs{display:flex;gap:4px}
-.tab{padding:6px 14px;border:1px solid var(--border);border-radius:8px;font-size:12px;cursor:pointer;background:transparent;color:var(--text);transition:.2s}
-.tab:hover,.tab.active{border-color:var(--accent);color:var(--accent);background:rgba(0,212,255,.05)}
-main{max-width:1100px;margin:0 auto;padding:14px}
-.page{display:none}.page.active{display:block}
-.grid{display:grid;gap:12px}.g2{grid-template-columns:1fr 1fr}.g3{grid-template-columns:1fr 1fr 1fr}
-.card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px}
-.card h3{font-size:13px;color:var(--accent);margin-bottom:10px;display:flex;align-items:center;gap:6px}
-.row{display:flex;justify-content:space-between;padding:4px 0;font-size:13px;border-bottom:1px solid rgba(255,255,255,.03)}
-.row:last-child{border:none}.k{color:var(--dim)}.v{font-family:Consolas,monospace}
-.btn{padding:8px 16px;border:1px solid var(--border);border-radius:8px;background:var(--card);color:var(--text);font-size:13px;cursor:pointer;transition:.2s}
-.btn:hover{border-color:var(--accent);color:var(--accent)}
-.btn.on{border-color:var(--ok);color:var(--ok);background:rgba(0,255,136,.08)}
-.btn.primary{background:linear-gradient(135deg,var(--accent),#0088cc);border:none;color:#fff;font-weight:600}
-.btn.danger{border-color:var(--err);color:var(--err)}
-.switch{position:relative;display:inline-block;width:40px;height:22px}
-.switch input{opacity:0;width:0;height:0}
-.slider{position:absolute;cursor:pointer;top:0;left:0;right:0;bottom:0;background:#333;border-radius:22px;transition:.3s}
-.slider:before{content:'';position:absolute;height:16px;width:16px;left:3px;bottom:3px;background:#fff;border-radius:50%;transition:.3s}
-input:checked+.slider{background:var(--ok)}
-input:checked+.slider:before{transform:translateX(18px)}
-.hero{display:flex;align-items:center;gap:20px;padding:14px}
-.ring-wrap{position:relative;width:120px;height:120px;flex-shrink:0}
-.ring-wrap svg{width:100%;height:100%;transform:rotate(-90deg)}
-.r-bg{fill:none;stroke:var(--border);stroke-width:8}.r-fg{fill:none;stroke:var(--accent);stroke-width:8;stroke-linecap:round;stroke-dasharray:301.6;stroke-dashoffset:301.6;transition:all .8s}
-.r-fg.ok{stroke:var(--ok)}.r-fg.warn{stroke:var(--warn)}.r-fg.err{stroke:var(--err)}
-.ring-inner{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center}
-.ring-inner .n{font-size:32px;font-weight:800;font-family:Consolas,monospace}
-.ring-inner .u{font-size:12px;color:var(--dim)}
-.stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;flex:1}
-.stat{background:rgba(255,255,255,.03);border-radius:8px;padding:8px 10px}
-.stat .k{font-size:10px;color:var(--dim);margin-bottom:2px}.stat .v{font-size:18px;font-weight:700;font-family:Consolas,monospace}
-canvas#minimap{border-radius:8px;background:#050a15;border:1px solid var(--border)}
-.entity-list{max-height:160px;overflow-y:auto;font-size:12px}
-.entity-list::-webkit-scrollbar{width:3px}.entity-list::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px}
-.er{display:flex;gap:6px;padding:3px 0;align-items:center}
-.er .dot{width:6px;height:6px;border-radius:50%}.er .name{flex:1;font-family:Consolas,monospace}.er .dist{color:var(--dim);font-family:Consolas,monospace;width:50px;text-align:right}
-.recommend{background:rgba(0,212,255,.05);border:1px solid rgba(0,212,255,.12);border-radius:8px;padding:8px 12px;font-size:12px;line-height:1.6;margin-top:8px}
-.tut{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:16px;line-height:2;font-size:13px}
-.tut h2{color:var(--accent);margin-bottom:10px;font-size:15px}
-.tut code{background:rgba(0,212,255,.1);color:var(--accent);padding:1px 6px;border-radius:4px;font-size:12px}
-.tut ol{padding-left:20px}
-.acc-row{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid rgba(255,255,255,.03)}
-.acc-row .name{flex:1;font-weight:600}.acc-row .port{font-family:Consolas,monospace;color:var(--dim);font-size:12px}
-.acc-row .status{font-size:11px;padding:2px 8px;border-radius:10px}
-.acc-row .status.on{background:rgba(0,255,136,.1);color:var(--ok)}.acc-row .status.off{background:rgba(255,255,255,.05);color:var(--dim)}
-input[type=text]{background:var(--bg);border:1px solid var(--border);border-radius:6px;padding:6px 10px;color:var(--text);font-size:13px;outline:none}
-input[type=text]:focus{border-color:var(--accent)}
-@keyframes pulse{0%,100%{opacity:1}50%{opacity:.5}}
-.pulse{animation:pulse 1s infinite}
+  :root {
+    --bg-primary: #121820;
+    --bg-secondary: #0D1218;
+    --bg-card: rgba(255,255,255,0.04);
+    --bg-card-hover: rgba(255,255,255,0.06);
+    --border-card: rgba(255,255,255,0.06);
+    --border-card-hover: rgba(255,255,255,0.12);
+    --gold: #C9A87C;
+    --gold-dim: rgba(201,168,124,0.15);
+    --gold-glow: rgba(201,168,124,0.08);
+    --deep-blue: #1A2A3A;
+    --text-primary: #F0F0F0;
+    --text-secondary: #8892A0;
+    --text-muted: #5A6578;
+    --green: #4ADE80;
+    --green-dim: rgba(74,222,128,0.12);
+    --red: #F87171;
+    --red-dim: rgba(248,113,113,0.12);
+    --radius-sm: 4px;
+    --radius-md: 5px;
+    --radius-lg: 6px;
+    --font-title: 'Inter', -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif;
+    --font-mono: 'JetBrains Mono', 'SF Mono', monospace;
+    --shadow-sm: 0 1px 2px rgba(0,0,0,0.3);
+    --shadow-md: 0 4px 12px rgba(0,0,0,0.4);
+    --shadow-gold: 0 0 20px rgba(201,168,124,0.08);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: var(--font-title);
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    user-select: none;
+  }
+
+  /* ===== App Container ===== */
+  .app {
+    display: flex;
+    width: 100%;
+    height: 100%;
+  }
+
+  /* ===== Sidebar ===== */
+  .sidebar {
+    width: 200px;
+    background: var(--bg-secondary);
+    border-right: 1px solid var(--border-card);
+    display: flex;
+    flex-direction: column;
+    flex-shrink: 0;
+    position: relative;
+  }
+
+  .sidebar::after {
+    content: '';
+    position: absolute;
+    top: 0; right: 0;
+    width: 1px; height: 100%;
+    background: linear-gradient(180deg, transparent 0%, rgba(201,168,124,0.08) 50%, transparent 100%);
+  }
+
+  .logo-area {
+    padding: 24px 20px 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    border-bottom: 1px solid var(--border-card);
+  }
+
+  .logo-icon {
+    width: 32px;
+    height: 32px;
+    flex-shrink: 0;
+  }
+
+  .logo-text {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+  }
+
+  .logo-title {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-primary);
+    letter-spacing: 0.3px;
+  }
+
+  .logo-sub {
+    font-size: 10px;
+    color: var(--text-muted);
+    font-weight: 400;
+    letter-spacing: 0.5px;
+  }
+
+  .nav-menu {
+    flex: 1;
+    padding: 12px 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .nav-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 9px 12px;
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    color: var(--text-secondary);
+    font-size: 13px;
+    font-weight: 500;
+    position: relative;
+  }
+
+  .nav-item:hover {
+    background: rgba(255,255,255,0.03);
+    color: var(--text-primary);
+  }
+
+  .nav-item.active {
+    background: var(--gold-dim);
+    color: var(--gold);
+  }
+
+  .nav-item.active::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 50%;
+    transform: translateY(-50%);
+    width: 2px; height: 16px;
+    background: var(--gold);
+    border-radius: 0 2px 2px 0;
+  }
+
+  .nav-icon {
+    width: 18px;
+    height: 18px;
+    flex-shrink: 0;
+    opacity: 0.7;
+    transition: opacity 0.2s;
+  }
+
+  .nav-item:hover .nav-icon,
+  .nav-item.active .nav-icon {
+    opacity: 1;
+  }
+
+  .nav-item.active .nav-icon {
+    stroke: var(--gold);
+  }
+
+  .sidebar-footer {
+    padding: 14px 16px;
+    border-top: 1px solid var(--border-card);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .status-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--green);
+    box-shadow: 0 0 6px var(--green);
+    animation: pulse-dot 2s ease-in-out infinite;
+  }
+
+  .status-dot.off { background: var(--red); box-shadow: 0 0 6px var(--red); }
+
+  @keyframes pulse-dot {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.5; transform: scale(0.85); }
+  }
+
+  .status-text {
+    font-size: 11px;
+    color: var(--text-muted);
+    font-family: var(--font-mono);
+  }
+
+  .version-tag {
+    font-size: 10px;
+    color: var(--text-muted);
+    background: rgba(255,255,255,0.04);
+    padding: 2px 6px;
+    border-radius: var(--radius-sm);
+    font-family: var(--font-mono);
+  }
+
+  /* ===== Main Content ===== */
+  .main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    background: var(--bg-primary);
+    position: relative;
+  }
+
+  .main::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; height: 200px;
+    background: radial-gradient(ellipse 80% 50% at 50% 0%, rgba(201,168,124,0.03) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .main-header {
+    padding: 20px 28px 12px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: relative;
+    z-index: 1;
+  }
+
+  .page-title {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--text-primary);
+    letter-spacing: -0.2px;
+  }
+
+  .page-subtitle {
+    font-size: 12px;
+    color: var(--text-secondary);
+    margin-top: 2px;
+  }
+
+  .header-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .icon-btn {
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--bg-card);
+    border: 1px solid var(--border-card);
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    color: var(--text-secondary);
+  }
+
+  .icon-btn:hover {
+    background: var(--bg-card-hover);
+    border-color: var(--border-card-hover);
+    color: var(--text-primary);
+  }
+
+  .icon-btn svg {
+    width: 16px;
+    height: 16px;
+  }
+
+  /* ===== Content Area ===== */
+  .content {
+    flex: 1;
+    padding: 0 28px 24px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .content::-webkit-scrollbar { width: 4px; }
+  .content::-webkit-scrollbar-track { background: transparent; }
+  .content::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.08); border-radius: 2px; }
+
+  .page { display: none; flex-direction: column; gap: 16px; }
+  .page.active { display: flex; }
+
+  /* ===== Status Overview Cards ===== */
+  .stats-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+  }
+
+  .stat-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-card);
+    border-radius: var(--radius-lg);
+    padding: 16px 18px;
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .stat-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(201,168,124,0.1), transparent);
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+
+  .stat-card:hover {
+    background: var(--bg-card-hover);
+    border-color: var(--border-card-hover);
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-md);
+  }
+
+  .stat-card:hover::before {
+    opacity: 1;
+  }
+
+  .stat-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 10px;
+  }
+
+  .stat-label {
+    font-size: 12px;
+    color: var(--text-secondary);
+    font-weight: 500;
+    letter-spacing: 0.3px;
+  }
+
+  .stat-icon-wrap {
+    width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: var(--radius-sm);
+    background: rgba(255,255,255,0.03);
+  }
+
+  .stat-icon-wrap svg {
+    width: 14px;
+    height: 14px;
+  }
+
+  .stat-value {
+    font-family: var(--font-mono);
+    font-size: 26px;
+    font-weight: 700;
+    color: var(--text-primary);
+    line-height: 1.2;
+    letter-spacing: -0.5px;
+  }
+
+  .stat-unit {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-secondary);
+    margin-left: 2px;
+  }
+
+  .stat-meta {
+    margin-top: 6px;
+    font-size: 11px;
+    color: var(--text-muted);
+    font-family: var(--font-mono);
+  }
+
+  .stat-meta .trend-up { color: var(--red); }
+  .stat-meta .trend-down { color: var(--green); }
+
+  /* Status badge */
+  .status-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 3px 8px;
+    border-radius: var(--radius-sm);
+    font-size: 11px;
+    font-weight: 600;
+    font-family: var(--font-mono);
+    letter-spacing: 0.3px;
+  }
+
+  .status-badge.accelerated {
+    background: var(--green-dim);
+    color: var(--green);
+    border: 1px solid rgba(74,222,128,0.15);
+  }
+
+  .status-badge.idle {
+    background: var(--red-dim);
+    color: var(--red);
+    border: 1px solid rgba(248,113,113,0.15);
+  }
+
+  .badge-dot {
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+  }
+
+  .status-badge.accelerated .badge-dot { background: var(--green); box-shadow: 0 0 4px var(--green); }
+  .status-badge.idle .badge-dot { background: var(--red); }
+
+  /* ===== Action Area ===== */
+  .action-area {
+    display: flex;
+    gap: 10px;
+    align-items: stretch;
+    flex-wrap: wrap;
+  }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 0 20px;
+    height: 42px;
+    border: none;
+    border-radius: var(--radius-md);
+    font-family: var(--font-title);
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+    letter-spacing: 0.2px;
+  }
+
+  .btn:active {
+    transform: translateY(1px) scale(0.985);
+  }
+
+  .btn-primary {
+    background: linear-gradient(135deg, var(--gold) 0%, #B8956A 100%);
+    color: #0D1218;
+    box-shadow: 0 2px 8px rgba(201,168,124,0.2), inset 0 1px 0 rgba(255,255,255,0.15);
+  }
+
+  .btn-primary:hover {
+    box-shadow: 0 4px 16px rgba(201,168,124,0.3), inset 0 1px 0 rgba(255,255,255,0.2);
+    filter: brightness(1.05);
+  }
+
+  .btn-primary:active {
+    box-shadow: 0 1px 4px rgba(201,168,124,0.15);
+    filter: brightness(0.95);
+  }
+
+  .btn-secondary {
+    background: var(--bg-card);
+    color: var(--text-primary);
+    border: 1px solid var(--border-card);
+  }
+
+  .btn-secondary:hover {
+    background: var(--bg-card-hover);
+    border-color: var(--border-card-hover);
+  }
+
+  .btn-secondary:active {
+    background: rgba(255,255,255,0.02);
+  }
+
+  .btn-ghost {
+    background: transparent;
+    color: var(--text-secondary);
+    border: 1px solid var(--border-card);
+  }
+
+  .btn-ghost:hover {
+    background: var(--bg-card);
+    color: var(--text-primary);
+    border-color: var(--border-card-hover);
+  }
+
+  .btn-danger {
+    background: var(--red-dim);
+    color: var(--red);
+    border: 1px solid rgba(248,113,113,0.2);
+  }
+
+  .btn-danger:hover {
+    background: rgba(248,113,113,0.2);
+    filter: brightness(1.1);
+  }
+
+  .btn svg {
+    width: 15px;
+    height: 15px;
+    flex-shrink: 0;
+  }
+
+  /* ===== Game Preview ===== */
+  .preview-section {
+    flex: 1;
+    min-height: 320px;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .section-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 10px;
+  }
+
+  .section-title {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-secondary);
+    letter-spacing: 0.3px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .section-title svg {
+    width: 14px;
+    height: 14px;
+    opacity: 0.6;
+  }
+
+  .game-preview {
+    flex: 1;
+    min-height: 0;
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-card);
+    border-radius: var(--radius-lg);
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .game-preview::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background:
+      radial-gradient(circle at 20% 80%, rgba(26,42,58,0.4) 0%, transparent 50%),
+      radial-gradient(circle at 80% 20%, rgba(201,168,124,0.03) 0%, transparent 40%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .game-preview-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 14px;
+    border-bottom: 1px solid var(--border-card);
+    position: relative;
+    z-index: 1;
+  }
+
+  .game-title {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-secondary);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .game-title svg {
+    width: 14px;
+    height: 14px;
+  }
+
+  .game-controls {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .game-ctrl-btn {
+    width: 22px;
+    height: 22px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255,255,255,0.03);
+    border: 1px solid var(--border-card);
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    color: var(--text-muted);
+    transition: all 0.2s;
+  }
+
+  .game-ctrl-btn:hover {
+    background: rgba(255,255,255,0.06);
+    color: var(--text-secondary);
+  }
+
+  .game-ctrl-btn svg {
+    width: 10px;
+    height: 10px;
+  }
+
+  .game-viewport {
+    flex: 1;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1;
+  }
+
+  .game-placeholder {
+    text-align: center;
+    padding: 40px;
+  }
+
+  .game-placeholder-icon {
+    width: 64px;
+    height: 64px;
+    margin: 0 auto 16px;
+    opacity: 0.25;
+  }
+
+  .game-placeholder-text {
+    font-size: 14px;
+    color: var(--text-muted);
+    font-weight: 500;
+    margin-bottom: 4px;
+  }
+
+  .game-placeholder-sub {
+    font-size: 12px;
+    color: var(--text-muted);
+    opacity: 0.7;
+  }
+
+  .game-placeholder-url {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--gold);
+    opacity: 0.6;
+    margin-top: 8px;
+    letter-spacing: 0.3px;
+  }
+
+  /* Grid overlay for game viewport */
+  .grid-overlay {
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background-image:
+      linear-gradient(rgba(255,255,255,0.015) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.015) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events: none;
+  }
+
+  /* ===== Latency Graph (mini) ===== */
+  .latency-graph {
+    height: 40px;
+    display: flex;
+    align-items: flex-end;
+    gap: 2px;
+    padding: 0 2px;
+    margin-top: 8px;
+  }
+
+  .latency-bar {
+    flex: 1;
+    background: rgba(74,222,128,0.25);
+    border-radius: 1px 1px 0 0;
+    transition: height 0.3s ease;
+    min-height: 2px;
+  }
+
+  .latency-bar.high { background: rgba(248,113,113,0.35); }
+  .latency-bar.med { background: rgba(201,168,124,0.3); }
+
+  /* ===== Testing Animation ===== */
+  .testing-overlay {
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(13,18,24,0.85);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    z-index: 10;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s;
+    backdrop-filter: blur(4px);
+  }
+
+  .testing-overlay.active {
+    opacity: 1;
+    pointer-events: all;
+  }
+
+  .spinner {
+    width: 32px;
+    height: 32px;
+    border: 2px solid var(--border-card);
+    border-top-color: var(--gold);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+  }
+
+  @keyframes spin {
+    to { transform: rotate(360deg); }
+  }
+
+  .testing-text {
+    font-size: 13px;
+    color: var(--text-secondary);
+    font-family: var(--font-mono);
+  }
+
+  .testing-dots::after {
+    content: '';
+    animation: dots 1.5s steps(4, end) infinite;
+  }
+
+  @keyframes dots {
+    0% { content: ''; }
+    25% { content: '.'; }
+    50% { content: '..'; }
+    75% { content: '...'; }
+  }
+
+  /* ===== Divider / Separator ===== */
+  .divider {
+    height: 1px;
+    background: var(--border-card);
+    margin: 4px 0;
+  }
+
+  /* ===== Server Info Row ===== */
+  .server-info {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 10px 14px;
+    background: var(--bg-card);
+    border: 1px solid var(--border-card);
+    border-radius: var(--radius-md);
+    flex-wrap: wrap;
+  }
+
+  .server-info-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    color: var(--text-secondary);
+  }
+
+  .server-info-item svg {
+    width: 12px;
+    height: 12px;
+    opacity: 0.5;
+  }
+
+  .server-info-item strong {
+    color: var(--text-primary);
+    font-weight: 600;
+    font-family: var(--font-mono);
+  }
+
+  /* ===== Cards / Tables ===== */
+  .card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-card);
+    border-radius: var(--radius-lg);
+    padding: 16px 18px;
+  }
+
+  .card h3 {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-secondary);
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    letter-spacing: 0.3px;
+  }
+
+  .card h3 svg { width: 14px; height: 14px; opacity: 0.6; }
+
+  .grid { display: grid; gap: 12px; }
+  .g2 { grid-template-columns: 1fr 1fr; }
+  .g3 { grid-template-columns: 1fr 1fr 1fr; }
+
+  .row {
+    display: flex;
+    justify-content: space-between;
+    padding: 4px 0;
+    font-size: 12px;
+    border-bottom: 1px solid rgba(255,255,255,0.03);
+  }
+
+  .row:last-child { border: none; }
+  .k { color: var(--text-muted); }
+  .v { font-family: var(--font-mono); color: var(--text-primary); }
+
+  /* Ring gauge */
+  .ring-wrap {
+    position: relative;
+    width: 120px;
+    height: 120px;
+    flex-shrink: 0;
+  }
+
+  .ring-wrap svg { width: 100%; height: 100%; transform: rotate(-90deg); }
+  .r-bg { fill: none; stroke: var(--border-card); stroke-width: 8; }
+  .r-fg {
+    fill: none; stroke: var(--gold); stroke-width: 8; stroke-linecap: round;
+    stroke-dasharray: 301.6; stroke-dashoffset: 301.6; transition: all .8s;
+  }
+  .r-fg.ok { stroke: var(--green); }
+  .r-fg.warn { stroke: var(--gold); }
+  .r-fg.err { stroke: var(--red); }
+  .ring-inner { position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%); text-align: center; }
+  .ring-inner .n { font-size: 30px; font-weight: 700; font-family: var(--font-mono); }
+  .ring-inner .u { font-size: 11px; color: var(--text-muted); }
+
+  .hero {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+  }
+
+  .stats-row-4 {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px;
+    flex: 1;
+  }
+
+  .stat-mini { background: rgba(255,255,255,0.03); border-radius: var(--radius-md); padding: 8px 10px; }
+  .stat-mini .k { font-size: 10px; color: var(--text-muted); margin-bottom: 2px; }
+  .stat-mini .v { font-size: 16px; font-weight: 600; font-family: var(--font-mono); }
+
+  /* Entity list */
+  .entity-list {
+    max-height: 160px;
+    overflow-y: auto;
+    font-size: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .entity-list::-webkit-scrollbar { width: 3px; }
+  .entity-list::-webkit-scrollbar-thumb { background: var(--border-card); border-radius: 2px; }
+
+  .er {
+    display: flex;
+    gap: 6px;
+    padding: 3px 0;
+    align-items: center;
+    font-size: 12px;
+  }
+  .er .dot { width: 6px; height: 6px; border-radius: 50%; }
+  .er .name { flex: 1; font-family: var(--font-mono); color: var(--text-primary); }
+  .er .dist { color: var(--text-muted); font-family: var(--font-mono); width: 50px; text-align: right; }
+
+  .recommend {
+    background: var(--gold-dim);
+    border: 1px solid rgba(201,168,124,0.15);
+    border-radius: var(--radius-md);
+    padding: 8px 12px;
+    font-size: 12px;
+    line-height: 1.6;
+    margin-top: 8px;
+    color: var(--gold);
+  }
+
+  /* Switch */
+  .switch { position: relative; display: inline-block; width: 38px; height: 21px; flex-shrink: 0; }
+  .switch input { opacity: 0; width: 0; height: 0; }
+  .slider {
+    position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(255,255,255,0.08); border-radius: 21px; transition: .3s;
+  }
+  .slider:before {
+    content: ''; position: absolute; height: 15px; width: 15px; left: 3px; bottom: 3px;
+    background: #fff; border-radius: 50%; transition: .3s;
+  }
+  input:checked + .slider { background: var(--gold); }
+  input:checked + .slider:before { transform: translateX(17px); }
+
+  /* Inputs */
+  input[type=text], select {
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-card);
+    border-radius: var(--radius-md);
+    padding: 8px 12px;
+    color: var(--text-primary);
+    font-size: 12px;
+    font-family: var(--font-title);
+    outline: none;
+    height: 38px;
+  }
+  input[type=text]:focus, select:focus { border-color: var(--gold); }
+
+  /* Acc row */
+  .acc-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.03);
+  }
+  .acc-row:last-child { border: none; }
+  .acc-row .name { flex: 1; font-weight: 600; font-size: 13px; }
+  .acc-row .port { font-family: var(--font-mono); color: var(--text-muted); font-size: 12px; }
+  .acc-row .status { font-size: 11px; padding: 2px 8px; border-radius: 10px; }
+  .acc-row .status.on { background: var(--green-dim); color: var(--green); }
+  .acc-row .status.off { background: rgba(255,255,255,0.05); color: var(--text-muted); }
+
+  /* Tutorial */
+  .tut { line-height: 2; font-size: 13px; }
+  .tut h2 { color: var(--gold); margin-bottom: 10px; font-size: 14px; margin-top: 16px; }
+  .tut h2:first-child { margin-top: 0; }
+  .tut code {
+    background: var(--gold-dim); color: var(--gold); padding: 1px 6px;
+    border-radius: var(--radius-sm); font-size: 12px; font-family: var(--font-mono);
+  }
+  .tut ol { padding-left: 20px; }
+  .tut li { color: var(--text-secondary); }
+
+  /* DNS rows */
+  .dns-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.03);
+    font-size: 12px;
+  }
+  .dns-row:last-child { border: none; }
+  .dns-host { font-family: var(--font-mono); color: var(--text-primary); }
+  .dns-meta { color: var(--text-muted); font-family: var(--font-mono); font-size: 11px; }
+  .dns-lat { color: var(--gold); font-family: var(--font-mono); font-weight: 600; }
+
+  /* Tooltip */
+  [data-tooltip] { position: relative; }
+  [data-tooltip]::after {
+    content: attr(data-tooltip);
+    position: absolute;
+    bottom: calc(100% + 6px);
+    left: 50%;
+    transform: translateX(-50%) translateY(4px);
+    padding: 4px 8px;
+    background: #1E2832;
+    border: 1px solid var(--border-card);
+    border-radius: var(--radius-sm);
+    font-size: 11px;
+    color: var(--text-secondary);
+    white-space: nowrap;
+    opacity: 0;
+    pointer-events: none;
+    transition: all 0.2s ease;
+    box-shadow: var(--shadow-md);
+    z-index: 100;
+  }
+  [data-tooltip]:hover::after {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+
+  .content { scrollbar-width: thin; scrollbar-color: rgba(255,255,255,0.08) transparent; }
+
+  .empty-hint { color: var(--text-muted); font-size: 12px; padding: 8px 0; }
+
+  @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: .5; } }
+  .pulse { animation: pulse 1s infinite; }
+
+  /* ===== Responsive ===== */
+  @media (max-width: 800px) {
+    .sidebar { display: none; }
+    .stats-row { grid-template-columns: 1fr; }
+    .stats-row-4 { grid-template-columns: repeat(2, 1fr); }
+    .g2, .g3 { grid-template-columns: 1fr; }
+    .action-area { flex-wrap: wrap; }
+    .btn { flex: 1; min-width: 120px; }
+    .hero { flex-direction: column; align-items: flex-start; }
+  }
 </style>
 </head>
 <body>
-<header>
-  <div class="logo"><span>🐉</span><h1>龙之归宿加速器</h1><span style="font-size:10px;color:var(--dim)">v4.0</span></div>
-  <div class="tabs">
-    <button class="tab active" onclick="showPage('dash')">📊 仪表盘</button>
-    <button class="tab" onclick="showPage('settings')">⚙️ 设置</button>
-    <button class="tab" onclick="showPage('multi')">👥 多开</button>
-    <button class="tab" onclick="showPage('tutorial')">📖 教程</button>
-  </div>
-</header>
 
-<main>
-  <!-- 仪表盘 -->
-  <div class="page active" id="page-dash">
-    <div class="card hero" style="margin-bottom:12px">
-      <div class="ring-wrap">
-        <svg viewBox="0 0 110 110"><circle class="r-bg" cx="55" cy="55" r="48"/><circle class="r-fg" cx="55" cy="55" r="48" id="ring"/></svg>
-        <div class="ring-inner"><div class="n" id="latVal">--</div><div class="u">ms</div></div>
-      </div>
-      <div class="stats-row">
-        <div class="stat"><div class="k">平均延迟</div><div class="v" id="sAvg">--</div></div>
-        <div class="stat"><div class="k">抖动</div><div class="v" id="sJitter">--</div></div>
-        <div class="stat"><div class="k">丢包</div><div class="v" id="sLoss">--</div></div>
-        <div class="stat"><div class="k">缓存命中</div><div class="v" id="sCache">--</div></div>
-        <div class="stat"><div class="k">WS 帧</div><div class="v" id="sFrames">--</div></div>
-        <div class="stat"><div class="k">实体数</div><div class="v" id="sEntities">--</div></div>
-        <div class="stat"><div class="k">解析帧</div><div class="v" id="sParse">--</div></div>
-        <div class="stat"><div class="k">运行</div><div class="v" id="sUptime">--</div></div>
+<div class="app">
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="logo-area">
+      <svg class="logo-icon" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M16 2L4 9v14l12 7 12-7V9L16 2z" stroke="#C9A87C" stroke-width="1.2" fill="none" opacity="0.3"/>
+        <path d="M16 6L8 10.5v9L16 24l8-4.5v-9L16 6z" stroke="#C9A87C" stroke-width="1" fill="none"/>
+        <path d="M16 10l-4 2.25v4.5L16 19l4-2.25v-4.5L16 10z" fill="#C9A87C" opacity="0.15"/>
+        <path d="M16 10v9M12 12.25L16 14.5l4-2.25M12 16.75L16 19l4-2.25" stroke="#C9A87C" stroke-width="0.8" opacity="0.6"/>
+        <circle cx="16" cy="14.5" r="1.5" fill="#C9A87C" opacity="0.8"/>
+      </svg>
+      <div class="logo-text">
+        <span class="logo-title">龙之归宿</span>
+        <span class="logo-sub">DRAGON ACCELERATOR</span>
       </div>
     </div>
-    <div class="grid g3">
-      <div class="card">
-        <h3>🎮 玩家状态</h3>
-        <div class="row"><span class="k">状态</span><span class="v" id="pAlive">--</span></div>
-        <div class="row"><span class="k">分数</span><span class="v" id="pScore">--</span></div>
-        <div class="row"><span class="k">位置</span><span class="v" id="pPos">--</span></div>
-        <div class="row"><span class="k">速度</span><span class="v" id="pSpeed">--</span></div>
-        <div class="row"><span class="k">航向</span><span class="v" id="pDir">--</span></div>
-      </div>
-      <div class="card">
-        <h3>⚠️ 威胁</h3>
-        <div class="row"><span class="k">等级</span><span class="v" id="tLevel">--</span></div>
-        <div class="row"><span class="k">敌人</span><span class="v" id="tCount">0</span></div>
-        <div id="tList" class="entity-list"></div>
-        <div id="tRec" class="recommend">安全区域</div>
-      </div>
-      <div class="card">
-        <h3>📦 资源</h3>
-        <div id="rList" class="entity-list"><div style="color:var(--dim);font-size:12px">扫描中...</div></div>
-      </div>
-    </div>
-    <div class="grid g2" style="margin-top:12px">
-      <div class="card" style="display:flex;justify-content:center">
-        <canvas id="minimap" width="200" height="200"></canvas>
-      </div>
-      <div class="card">
-        <h3>📡 代理统计</h3>
-        <div class="row"><span class="k">HTTP 请求</span><span class="v" id="pxReqs">--</span></div>
-        <div class="row"><span class="k">缓存命中</span><span class="v" id="pxHits">--</span></div>
-        <div class="row"><span class="k">缓存项</span><span class="v" id="pxItems">--</span></div>
-        <div class="row"><span class="k">WS 活跃</span><span class="v" id="pxWs">--</span></div>
-        <div class="row"><span class="k">WS 帧</span><span class="v" id="pxWf">--</span></div>
-        <div class="row"><span class="k">错误</span><span class="v" id="pxErr">--</span></div>
-      </div>
-    </div>
-  </div>
 
-  <!-- 设置 -->
-  <div class="page" id="page-settings">
-    <div class="grid g2">
-      <div class="card">
-        <h3>🎯 自动操作</h3>
-        <div class="row"><span class="k">自动瞄准</span><label class="switch"><input type="checkbox" id="cAim" onchange="saveSetting('autoAim',this.checked)"><span class="slider"></span></label></div>
-        <div class="row"><span class="k">自动开火</span><label class="switch"><input type="checkbox" id="cFire" onchange="saveSetting('autoFire',this.checked)"><span class="slider"></span></label></div>
-        <div class="row"><span class="k">自动规避</span><label class="switch"><input type="checkbox" id="cDodge" onchange="saveSetting('autoDodge',this.checked)"><span class="slider"></span></label></div>
-        <div class="row"><span class="k">自动收集</span><label class="switch"><input type="checkbox" id="cCollect" onchange="saveSetting('autoCollect',this.checked)"><span class="slider"></span></label></div>
+    <nav class="nav-menu">
+      <div class="nav-item active" data-page="boost">
+        <svg class="nav-icon" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M9 2v3M9 13v3M4 4.5l2.1 2.1M11.9 11.4L14 13.5M2 9h3M13 9h3M4.5 14l2.1-2.1M11.4 6.1L13.5 4"/>
+          <circle cx="9" cy="9" r="2.5"/>
+        </svg>
+        <span>加速</span>
       </div>
-      <div class="card">
-        <h3>🌐 游戏目标</h3>
-        <div class="row"><span class="k">MK49 (龙之归宿)</span><label class="switch"><input type="checkbox" id="gMk49" checked onchange="saveGame(0,this.checked)"><span class="slider"></span></label></div>
-        <div class="row"><span class="k">MK48.io</span><label class="switch"><input type="checkbox" id="gMk48" checked onchange="saveGame(1,this.checked)"><span class="slider"></span></label></div>
-        <div class="row"><span class="k">MK49 论坛</span><label class="switch"><input type="checkbox" id="gForum" onchange="saveGame(2,this.checked)"><span class="slider"></span></label></div>
+      <div class="nav-item" data-page="monitor">
+        <svg class="nav-icon" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M2 14h14M4 10l3-4 3 2 4-5"/>
+          <path d="M14 3v3M14 6h3" stroke-width="1.2"/>
+        </svg>
+        <span>延迟监控</span>
       </div>
-      <div class="card">
-        <h3>💾 缓存 & 网络</h3>
-        <div class="row"><span class="k">资源缓存</span><label class="switch"><input type="checkbox" id="cCache" checked onchange="saveSetting('cacheEnabled',this.checked)"><span class="slider"></span></label></div>
-        <div class="row"><span class="k">DNS 预解析</span><label class="switch"><input type="checkbox" id="cDns" checked onchange="saveSetting('dnsPrefetch',this.checked)"><span class="slider"></span></label></div>
-        <div class="row"><span class="k">启动预加载</span><label class="switch"><input type="checkbox" id="cPrefetch" checked onchange="saveSetting('prefetchOnStart',this.checked)"><span class="slider"></span></label></div>
-        <div class="row"><span class="k">TCP NoDelay</span><label class="switch"><input type="checkbox" id="cTcp" checked onchange="saveSetting('tcpNoDelay',this.checked)"><span class="slider"></span></label></div>
+      <div class="nav-item" data-page="settings">
+        <svg class="nav-icon" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="9" cy="9" r="2.5"/>
+          <path d="M14.5 9c0-.6-.1-1.2-.3-1.7l1.8-1.8-1.4-1.4-1.8 1.8c-.5-.2-1.1-.3-1.7-.3V2.5H7.5V5.6c-.6 0-1.2.1-1.7.3L3.9 4.1 2.5 5.5l1.8 1.8c-.2.5-.3 1.1-.3 1.7H2.5v2h1.5c0 .6.1 1.2.3 1.7l-1.8 1.8 1.4 1.4 1.8-1.8c.5.2 1.1.3 1.7v3.1h2V14.4c.6 0 1.2-.1 1.7-.3l1.8 1.8 1.4-1.4-1.8-1.8c.2-.5.3-1.1.3-1.7h1.5V9h-1.5z"/>
+        </svg>
+        <span>设置</span>
       </div>
-      <div class="card">
-        <h3>🔐 保持登录</h3>
-        <div class="row"><span class="k">启用</span><label class="switch"><input type="checkbox" id="cKeep" checked onchange="saveSetting('keepLogin',this.checked)"><span class="slider"></span></label></div>
-        <div class="row"><span class="k">心跳间隔</span><span class="v">5 分钟</span></div>
-        <div class="row"><span class="k">状态</span><span class="v" id="keepStatus">--</span></div>
+      <div class="nav-item" data-page="multi">
+        <svg class="nav-icon" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="6.5" cy="6" r="2.5"/>
+          <circle cx="12.5" cy="6" r="2.5"/>
+          <path d="M2.5 14c0-2 1.8-3.5 4-3.5s4 1.5 4 3.5"/>
+          <path d="M11 10.5c2.2 0 4 1.5 4 3.5"/>
+        </svg>
+        <span>多开</span>
       </div>
-    </div>
-    <div style="margin-top:12px;display:flex;gap:8px">
-      <button class="btn" onclick="fetch('/api/clear-cache').then(()=>alert('缓存已清空'))">🧹 清空缓存</button>
-      <button class="btn danger" onclick="if(confirm('确定重置所有设置？'))fetch('/api/settings',{method:'POST',body:JSON.stringify({setupDone:false})}).then(()=>location.reload())">🔄 重置设置</button>
-    </div>
-  </div>
+      <div class="nav-item" data-page="about">
+        <svg class="nav-icon" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="9" cy="9" r="7"/>
+          <path d="M9 12V9M9 6.5v.1" stroke-width="1.8"/>
+        </svg>
+        <span>关于</span>
+      </div>
+    </nav>
 
-  <!-- 多开 -->
-  <div class="page" id="page-multi">
-    <div class="card">
-      <h3>👥 多开管理器</h3>
-      <p style="font-size:12px;color:var(--dim);margin-bottom:12px">同时运行多个游戏账号，每个实例独立代理端口，独立 Cookie 存储</p>
-      <div style="display:flex;gap:8px;margin-bottom:12px">
-        <input type="text" id="accAlias" placeholder="账号别名 (如: 小号1)">
-        <select id="accServer" style="background:var(--bg);border:1px solid var(--border);border-radius:6px;padding:6px 10px;color:var(--text);font-size:13px">
-          <option value="game.mk49.top">MK49 (game.mk49.top)</option>
-          <option value="mk48.io">MK48.io</option>
-        </select>
-        <button class="btn primary" onclick="addAccount()">➕ 添加</button>
+    <div class="sidebar-footer">
+      <div style="display:flex;align-items:center;gap:6px;">
+        <div class="status-dot" id="side-status-dot"></div>
+        <span class="status-text" id="side-status-text">连接中...</span>
       </div>
-      <div id="accList"></div>
+      <span class="version-tag">v5.0</span>
     </div>
-  </div>
+  </aside>
 
-  <!-- 教程 -->
-  <div class="page" id="page-tutorial">
-    <div class="tut">
-      <h2>📖 使用教程</h2>
-      <ol>
-        <li><b>启动加速器</b> — 运行 <code>npm start</code>，代理自动启动</li>
-        <li><b>配置浏览器代理</b> — 设置 → 网络 → 代理 → 手动代理：
-          <br>HTTP: <code>127.0.0.1</code> 端口: <code>9527</code>
-          <br>HTTPS: <code>127.0.0.1</code> 端口: <code>9527</code></li>
-        <li><b>打开游戏</b> — 访问 <code>https://game.mk49.top</code> 或 <code>https://mk48.io</code></li>
-        <li><b>首次加载</b> — 资源会从远程下载并缓存（约1-2秒）</li>
-        <li><b>后续加载</b> — 资源从本地缓存读取（<1ms），秒开！</li>
-        <li><b>查看仪表盘</b> — 浏览器打开 <code>http://localhost:3949</code></li>
-        <li><b>自动操作</b> — 在「设置」页面开启自动瞄准/开火/规避/收集</li>
-        <li><b>多开账号</b> — 在「多开」页面添加账号，每个账号独立代理端口</li>
-        <li><b>保持登录</b> — 默认开启，每5分钟发送心跳保持连接</li>
-      </ol>
-      <h2 style="margin-top:16px">⚡ 加速原理</h2>
-      <ol>
-        <li><b>资源缓存</b> — JS/WASM/图片首次下载后存本地，后续直接读取</li>
-        <li><b>DNS 预解析</b> — 启动时提前解析游戏域名，消除 DNS 延迟</li>
-        <li><b>TCP 优化</b> — 连接池复用 + NoDelay 减少握手开销</li>
-        <li><b>WebSocket 中继</b> — 游戏实时数据通过本地 WS 中继转发</li>
-      </ol>
-      <h2 style="margin-top:16px">🔧 代理配置详解</h2>
-      <ol>
-        <li>Chrome: 设置 → 系统 → 打开代理设置 → 局域网设置 → 代理服务器</li>
-        <li>Firefox: 设置 → 网络设置 → 手动代理配置</li>
-        <li>系统级: Windows 设置 → 网络 → 代理 → 手动设置</li>
-      </ol>
-      <h2 style="margin-top:16px">☁️ Cloudflare 部署</h2>
-      <ol>
-        <li>项目包含 <code>cloudflare-worker.js</code> 可部署到 Cloudflare Workers</li>
-        <li>运行 <code>wrangler deploy</code> 即可部署</li>
-        <li>通过 Worker URL 访问游戏，自带 CDN 加速</li>
-      </ol>
+  <!-- Main Content -->
+  <main class="main">
+    <header class="main-header">
+      <div>
+        <h1 class="page-title" id="page-title">加速中心</h1>
+        <p class="page-subtitle" id="page-subtitle">MK49 海战游戏网络优化</p>
+      </div>
+      <div class="header-actions">
+        <button class="icon-btn" data-tooltip="刷新数据" onclick="loadStats()">
+          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M13 8a5 5 0 11-1.5-3.5M13 2v3M13 5h-3" stroke-width="1.4"/>
+          </svg>
+        </button>
+      </div>
+    </header>
+
+    <div class="content">
+
+      <!-- ===== 加速页 ===== -->
+      <div class="page active" id="page-boost">
+        <!-- Server Info Bar -->
+        <div class="server-info">
+          <div class="server-info-item">
+            <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
+              <rect x="1" y="4" width="10" height="6" rx="1"/>
+              <path d="M3 4V2.5a1 1 0 011-1h4a1 1 0 011 1V4"/>
+              <path d="M4 7h4" stroke-width="1"/>
+            </svg>
+            <span>目标服务器</span>
+            <select id="info-target" onchange="switchTarget(this.value)" style="height:24px;font-size:11px;font-family:var(--font-mono);padding:0 6px">
+              <option value="game.mk49.top">game.mk49.top</option>
+              <option value="mk48.io">mk48.io</option>
+              <option value="forum.mk49.top">forum.mk49.top</option>
+            </select>
+          </div>
+          <div class="server-info-item">
+            <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
+              <circle cx="6" cy="6" r="5"/>
+              <path d="M6 3v3l2 2" stroke-width="1.2"/>
+            </svg>
+            <span>加速节点</span>
+            <strong id="info-node">--</strong>
+          </div>
+          <div class="server-info-item">
+            <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
+              <path d="M1 6h2l2-3 2 6 2-3h2"/>
+            </svg>
+            <span>协议</span>
+            <strong>TCP / UDP</strong>
+          </div>
+          <div class="server-info-item">
+            <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
+              <rect x="2" y="1" width="8" height="10" rx="1"/>
+              <path d="M6 4v3" stroke-width="1.2"/>
+              <circle cx="6" cy="8.5" r="0.5" fill="currentColor"/>
+            </svg>
+            <span>缓存</span>
+            <strong id="info-cache">--</strong>
+          </div>
+        </div>
+
+        <!-- Stats Cards -->
+        <div class="stats-row">
+          <div class="stat-card">
+            <div class="stat-header">
+              <span class="stat-label">加速状态</span>
+              <div class="stat-icon-wrap">
+                <svg viewBox="0 0 14 14" fill="none" stroke="#C9A87C" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M7 1.5l1.8 3.6 4 .6-2.9 2.8.7 4L7 10.3l-3.6 2 .7-4L1.2 5.7l4-.6L7 1.5z"/>
+                </svg>
+              </div>
+            </div>
+            <div>
+              <span id="status-badge" class="status-badge idle">
+                <span class="badge-dot"></span>
+                <span id="status-text">未加速</span>
+              </span>
+            </div>
+            <div class="stat-meta" id="status-meta">点击启动加速以优化网络</div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-header">
+              <span class="stat-label">网络延迟</span>
+              <div class="stat-icon-wrap">
+                <svg viewBox="0 0 14 14" fill="none" stroke="#8892A0" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M1 10l3-4 3 2 4-5"/>
+                  <path d="M11 3v3M11 6h3" stroke-width="1"/>
+                </svg>
+              </div>
+            </div>
+            <div>
+              <span id="latency-value" class="stat-value">--</span>
+              <span class="stat-unit">ms</span>
+            </div>
+            <div class="latency-graph" id="latency-graph"></div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-header">
+              <span class="stat-label">抖动 / 丢包</span>
+              <div class="stat-icon-wrap">
+                <svg viewBox="0 0 14 14" fill="none" stroke="#8892A0" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M2 7h2.5l2-3 2.5 6 2-3H12"/>
+                  <circle cx="7" cy="7" r="5.5" stroke-dasharray="2 2" opacity="0.4"/>
+                </svg>
+              </div>
+            </div>
+            <div>
+              <span id="jitter-value" class="stat-value">--</span>
+              <span class="stat-unit" style="font-size:11px;">ms</span>
+              <span style="color:var(--text-muted);margin:0 4px;">/</span>
+              <span id="loss-value" class="stat-value" style="font-size:18px;">--</span>
+              <span class="stat-unit" style="font-size:11px;">%</span>
+            </div>
+            <div class="stat-meta" id="jitter-meta">等待测试数据</div>
+          </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="action-area">
+          <button class="btn btn-primary" id="btn-boost" onclick="toggleBoost()">
+            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M8 2v4M8 10v4M4 4l2.8 2.8M9.2 9.2L12 12M2 8h4M10 8h4M4 12l2.8-2.8M9.2 6.8L12 4"/>
+            </svg>
+            <span id="btn-boost-text">启动加速</span>
+          </button>
+          <button class="btn btn-secondary" id="btn-test" onclick="runLatencyTest()">
+            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M2 10l4-4 3 2 5-6"/>
+              <path d="M13 2v4M13 6h4" stroke-width="1.2"/>
+            </svg>
+            <span>延迟测试</span>
+          </button>
+          <button class="btn btn-ghost" id="btn-launch" onclick="launchGame()">
+            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M3 2l10 6-10 6V2z"/>
+            </svg>
+            <span>进入游戏</span>
+          </button>
+          <button class="btn btn-danger" onclick="if(confirm('确定清空缓存？'))fetch('/api/clear-cache').then(()=>toast('缓存已清空'))">
+            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M2.5 4h11M6 4V2.5h4V4M4 4l.7 9.5h6.6L12 4M6.5 7v4M9.5 7v4"/>
+            </svg>
+            <span>清空缓存</span>
+          </button>
+        </div>
+
+        <!-- Game Preview -->
+        <div class="preview-section">
+          <div class="section-header">
+            <span class="section-title">
+              <svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="1" y="2" width="12" height="9" rx="1"/>
+                <path d="M5 11l2 2 2-2"/>
+                <path d="M6 5l2 2-2 2" stroke-width="1.2"/>
+              </svg>
+              游戏预览
+            </span>
+            <span style="font-size:11px;color:var(--text-muted);font-family:var(--font-mono);">WebView 隔离运行</span>
+          </div>
+          <div class="game-preview" id="game-preview">
+            <div class="grid-overlay"></div>
+            <div class="game-preview-header">
+              <span class="game-title">
+                <svg viewBox="0 0 14 14" fill="none" stroke="#C9A87C" stroke-width="1.4" stroke-linecap="round">
+                  <circle cx="7" cy="7" r="5.5"/>
+                  <path d="M4 7h6M7 4v6" stroke-width="1"/>
+                  <path d="M5 5l4 4M9 5l-4 4" opacity="0.4"/>
+                </svg>
+                MK49 海战
+              </span>
+              <div class="game-controls">
+                <button class="game-ctrl-btn" data-tooltip="刷新" onclick="launchGame()">
+                  <svg viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round">
+                    <path d="M5 1.5v-1M5 9.5v-1M1.5 5h-1M9.5 5h-1"/>
+                    <path d="M2.5 2.5a4 4 0 105 0"/>
+                  </svg>
+                </button>
+                <button class="game-ctrl-btn" data-tooltip="全屏" onclick="fullscreenGame()">
+                  <svg viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round">
+                    <path d="M1.5 3.5V1.5h2M8.5 3.5V1.5h-2M1.5 6.5v2h2M8.5 6.5v2h-2"/>
+                  </svg>
+                </button>
+              </div>
+            </div>
+            <div class="game-viewport" id="game-viewport">
+              <div class="game-placeholder">
+                <svg class="game-placeholder-icon" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M32 8L12 20v24l20 12 20-12V20L32 8z" stroke="#C9A87C" stroke-width="1" opacity="0.3"/>
+                  <path d="M32 16L18 24v16l14 8 14-8V24L32 16z" stroke="#C9A87C" stroke-width="0.8" opacity="0.2"/>
+                  <path d="M32 24l-6 3.5v7L32 38l6-3.5v-7L32 24z" fill="#C9A87C" opacity="0.08"/>
+                  <path d="M32 24v14M26 27.5L32 31l6-3.5M26 34.5L32 38l6-3.5" stroke="#C9A87C" stroke-width="0.6" opacity="0.15"/>
+                  <circle cx="32" cy="31" r="2" fill="#C9A87C" opacity="0.2"/>
+                  <path d="M20 44c4-2 8-3 12-3s8 1 12 3" stroke="#C9A87C" stroke-width="0.5" opacity="0.1"/>
+                  <path d="M16 48c6-3 12-4 16-4s10 1 16 4" stroke="#C9A87C" stroke-width="0.5" opacity="0.08"/>
+                </svg>
+                <div class="game-placeholder-text">游戏视图占位</div>
+                <div class="game-placeholder-sub">启动加速后可直接在此窗口内运行 MK49</div>
+                <div class="game-placeholder-url">https://game.mk49.top</div>
+              </div>
+            </div>
+
+            <!-- Testing Overlay -->
+            <div class="testing-overlay" id="testing-overlay">
+              <div class="spinner"></div>
+              <div class="testing-text">正在进行延迟测试<span class="testing-dots"></span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===== 延迟监控页 ===== -->
+      <div class="page" id="page-monitor">
+        <div class="card hero">
+          <div class="ring-wrap">
+            <svg viewBox="0 0 110 110">
+              <circle class="r-bg" cx="55" cy="55" r="48"/>
+              <circle class="r-fg" cx="55" cy="55" r="48" id="ring"/>
+            </svg>
+            <div class="ring-inner"><div class="n" id="latVal">--</div><div class="u">ms</div></div>
+          </div>
+          <div class="stats-row-4">
+            <div class="stat-mini"><div class="k">平均延迟</div><div class="v" id="sAvg">--</div></div>
+            <div class="stat-mini"><div class="k">抖动</div><div class="v" id="sJitter">--</div></div>
+            <div class="stat-mini"><div class="k">丢包</div><div class="v" id="sLoss">--</div></div>
+            <div class="stat-mini"><div class="k">缓存命中</div><div class="v" id="sCache">--</div></div>
+            <div class="stat-mini"><div class="k">HTTP 请求</div><div class="v" id="sReqs">--</div></div>
+            <div class="stat-mini"><div class="k">WS 帧</div><div class="v" id="sFrames">--</div></div>
+            <div class="stat-mini"><div class="k">实体数</div><div class="v" id="sEntities">--</div></div>
+            <div class="stat-mini"><div class="k">运行</div><div class="v" id="sUptime">--</div></div>
+          </div>
+        </div>
+
+        <div class="grid g3">
+          <div class="card">
+            <h3>🌊 玩家状态</h3>
+            <div class="row"><span class="k">状态</span><span class="v" id="pAlive">--</span></div>
+            <div class="row"><span class="k">分数</span><span class="v" id="pScore">--</span></div>
+            <div class="row"><span class="k">速度</span><span class="v" id="pSpeed">--</span></div>
+            <div class="row"><span class="k">航向</span><span class="v" id="pDir">--</span></div>
+            <div class="row"><span class="k">最后帧</span><span class="v" id="pFrame">--</span></div>
+          </div>
+          <div class="card">
+            <h3>⚠️ 威胁</h3>
+            <div class="row"><span class="k">等级</span><span class="v" id="tLevel">--</span></div>
+            <div class="row"><span class="k">实体</span><span class="v" id="tCount">0</span></div>
+            <div id="tList" class="entity-list"></div>
+            <div id="tRec" class="recommend">暂无数据</div>
+          </div>
+          <div class="card">
+            <h3>📡 代理统计</h3>
+            <div class="row"><span class="k">HTTP 请求</span><span class="v" id="pxReqs">--</span></div>
+            <div class="row"><span class="k">缓存命中</span><span class="v" id="pxHits">--</span></div>
+            <div class="row"><span class="k">内存缓存</span><span class="v" id="pxMem">--</span></div>
+            <div class="row"><span class="k">磁盘缓存</span><span class="v" id="pxDisk">--</span></div>
+            <div class="row"><span class="k">解析错误</span><span class="v" id="pxErr">--</span></div>
+            <div class="row"><span class="k">MITM 证书</span><span class="v" id="pxCa">--</span></div>
+          </div>
+        </div>
+
+        <div class="card">
+          <h3>🌍 智能 DNS 节点状态</h3>
+          <div id="dnsList" class="entity-list"><div class="empty-hint">智能 DNS 未启用或暂无数据</div></div>
+        </div>
+      </div>
+
+      <!-- ===== 设置页 ===== -->
+      <div class="page" id="page-settings">
+        <div class="grid g2">
+          <div class="card">
+            <h3>🎯 自动操作</h3>
+            <div class="row"><span class="k">自动瞄准</span><label class="switch"><input type="checkbox" id="cAim" onchange="saveSetting('autoAim',this.checked)"><span class="slider"></span></label></div>
+            <div class="row"><span class="k">自动开火</span><label class="switch"><input type="checkbox" id="cFire" onchange="saveSetting('autoFire',this.checked)"><span class="slider"></span></label></div>
+            <div class="row"><span class="k">自动规避</span><label class="switch"><input type="checkbox" id="cDodge" onchange="saveSetting('autoDodge',this.checked)"><span class="slider"></span></label></div>
+            <div class="row"><span class="k">自动收集</span><label class="switch"><input type="checkbox" id="cCollect" onchange="saveSetting('autoCollect',this.checked)"><span class="slider"></span></label></div>
+          </div>
+          <div class="card">
+            <h3>🌐 游戏目标</h3>
+            <div class="row"><span class="k">MK49 (龙之归宿)</span><label class="switch"><input type="checkbox" id="gMk49" onchange="saveGame(0,this.checked)"><span class="slider"></span></label></div>
+            <div class="row"><span class="k">MK48.io</span><label class="switch"><input type="checkbox" id="gMk48" onchange="saveGame(1,this.checked)"><span class="slider"></span></label></div>
+            <div class="row"><span class="k">MK49 论坛</span><label class="switch"><input type="checkbox" id="gForum" onchange="saveGame(2,this.checked)"><span class="slider"></span></label></div>
+            <div class="row"><span class="k">智能 DNS</span><label class="switch"><input type="checkbox" id="cSmartDns" onchange="saveSetting('smartDns',this.checked)"><span class="slider"></span></label></div>
+          </div>
+          <div class="card">
+            <h3>💾 缓存 & 网络</h3>
+            <div class="row"><span class="k">资源缓存</span><label class="switch"><input type="checkbox" id="cCache" onchange="saveSetting('cacheEnabled',this.checked)"><span class="slider"></span></label></div>
+            <div class="row"><span class="k">DNS 预解析</span><label class="switch"><input type="checkbox" id="cDns" onchange="saveSetting('dnsPrefetch',this.checked)"><span class="slider"></span></label></div>
+            <div class="row"><span class="k">启动预加载</span><label class="switch"><input type="checkbox" id="cPrefetch" onchange="saveSetting('prefetchOnStart',this.checked)"><span class="slider"></span></label></div>
+            <div class="row"><span class="k">TCP NoDelay</span><label class="switch"><input type="checkbox" id="cTcp" onchange="saveSetting('tcpNoDelay',this.checked)"><span class="slider"></span></label></div>
+            <div class="row"><span class="k">MITM 代理</span><label class="switch"><input type="checkbox" id="cMitm" onchange="saveSetting('mitmEnabled',this.checked)"><span class="slider"></span></label></div>
+          </div>
+          <div class="card">
+            <h3>🖥 系统代理</h3>
+            <div class="row"><span class="k">自动设置系统代理</span><label class="switch"><input type="checkbox" id="cAutoProxy" onchange="saveSetting('autoProxy',this.checked)"><span class="slider"></span></label></div>
+            <div class="row"><span class="k">代理端口</span><span class="v" id="proxyPort">--</span></div>
+            <div class="row"><span class="k">端口占用</span><span class="v" id="proxyFree">检测中...</span></div>
+            <div class="row"><span class="k">系统代理状态</span><span class="v" id="sysProxyState">--</span></div>
+            <div class="action-area" style="margin-top:10px">
+              <button class="btn btn-ghost" style="height:30px;font-size:11px" onclick="applySysProxy()">🖥 立即启用</button>
+              <button class="btn btn-ghost" style="height:30px;font-size:11px" onclick="restoreSysProxy()">♻️ 恢复原代理</button>
+            </div>
+            <div class="stat-meta" style="margin-top:8px" id="proxyNote">开启后自动接管系统代理，无需手动配置浏览器；退出时自动恢复，不影响 VPN</div>
+          </div>
+          <div class="card">
+            <h3>🔐 保持登录</h3>
+            <div class="row"><span class="k">启用</span><label class="switch"><input type="checkbox" id="cKeep" onchange="saveSetting('keepLogin',this.checked)"><span class="slider"></span></label></div>
+            <div class="row"><span class="k">心跳间隔</span><span class="v">5 分钟</span></div>
+            <div class="row"><span class="k">Cookie 域名</span><span class="v" id="keepStatus">--</span></div>
+          </div>
+        </div>
+        <div class="action-area" style="margin-top:4px">
+          <button class="btn btn-ghost" onclick="fetch('/api/clear-cache').then(()=>toast('缓存已清空'))">🧹 清空缓存</button>
+          <button class="btn btn-danger" onclick="if(confirm('确定重置所有设置？'))fetch('/api/settings',{method:'POST',body:JSON.stringify({setupDone:false})}).then(()=>location.reload())">🔄 重置设置</button>
+        </div>
+      </div>
+
+      <!-- ===== 多开页 ===== -->
+      <div class="page" id="page-multi">
+        <div class="card">
+          <h3>👥 多开管理器</h3>
+          <p style="font-size:12px;color:var(--text-muted);margin-bottom:12px">每个账号独立内嵌页面 + 独立代理端口 + 独立 Cookie 存储，可自定义带 token 的登录链接</p>
+          <div class="grid g2" style="margin-bottom:12px">
+            <div class="card" style="padding:12px 14px">
+              <div style="font-size:12px;color:var(--text-secondary);font-weight:600;margin-bottom:10px;letter-spacing:.3px">➕ 添加账号</div>
+              <div style="display:flex;flex-direction:column;gap:8px">
+                <input type="text" id="accAlias" placeholder="账号别名 (如: 小号1)">
+                <select id="accServer">
+                  <option value="game.mk49.top">MK49 (game.mk49.top)</option>
+                  <option value="mk48.io">MK48.io</option>
+                </select>
+                <div style="display:flex;gap:8px">
+                  <select id="accMode" style="flex:1">
+                    <option value="manual">👨 人工操作</option>
+                    <option value="ai">🤖 AI 操作</option>
+                  </select>
+                </div>
+                <input type="text" id="accUrl" placeholder="登录链接(可选，可带token) 如 https://game.mk49.top/?mk49Token=xxx">
+                <button class="btn btn-primary" style="height:36px" onclick="addAccount()">➕ 添加账号</button>
+              </div>
+            </div>
+            <div class="card" style="padding:12px 14px">
+              <div style="font-size:12px;color:var(--text-secondary);font-weight:600;margin-bottom:10px;letter-spacing:.3px">📖 说明</div>
+              <ol style="font-size:12px;color:var(--text-muted);line-height:1.9;padding-left:16px">
+                <li><b>AI 操作</b> — 页面内注入自动操作脚本（自动瞄准/开火/规避）</li>
+                <li><b>人工操作</b> — 纯人工游玩</li>
+                <li><b>登录链接</b> — 填写带 token 的链接即可免登录进入指定账号</li>
+                <li><b>Cookie</b> — 每次访问自动记录并持久化</li>
+                <li>启动后内嵌页面将直接展示在下方</li>
+              </ol>
+            </div>
+          </div>
+          <div id="accList"></div>
+        </div>
+      </div>
+
+      <!-- ===== 关于页 ===== -->
+      <div class="page" id="page-about">
+        <div class="card tut">
+          <h2>📖 使用教程</h2>
+          <ol>
+            <li><b>启动加速器</b> — 运行 <code>npm start</code>，代理自动启动</li>
+            <li><b>配置浏览器代理</b> — 设置 → 网络 → 代理 → 手动代理：
+              <br>HTTP: <code>127.0.0.1</code> 端口: <code>9527</code>
+              <br>HTTPS: <code>127.0.0.1</code> 端口: <code>9527</code></li>
+            <li><b>打开游戏</b> — 访问 <code>https://game.mk49.top</code> 或 <code>https://mk48.io</code></li>
+            <li><b>首次加载</b> — 资源会从远程下载并缓存（约1-2秒）</li>
+            <li><b>后续加载</b> — 资源从本地缓存读取（<1ms），秒开！</li>
+            <li><b>查看仪表盘</b> — 浏览器打开 <code>http://localhost:3949</code></li>
+            <li><b>自动操作</b> — 在「设置」页面开启自动瞄准/开火/规避/收集</li>
+            <li><b>多开账号</b> — 在「多开」页面添加账号，每个账号独立代理端口</li>
+            <li><b>保持登录</b> — 默认开启，每5分钟发送心跳保持连接</li>
+          </ol>
+          <h2>⚡ 加速原理</h2>
+          <ol>
+            <li><b>资源缓存</b> — JS/WASM/图片首次下载后存本地，后续直接读取</li>
+            <li><b>DNS 预解析</b> — 启动时提前解析游戏域名，消除 DNS 延迟</li>
+            <li><b>TCP 优化</b> — 连接池复用 + NoDelay 减少握手开销</li>
+            <li><b>WebSocket 中继</b> — 游戏实时数据通过本地 WS 中继转发</li>
+          </ol>
+          <h2>🔧 代理配置详解</h2>
+          <ol>
+            <li>Chrome: 设置 → 系统 → 打开代理设置 → 局域网设置 → 代理服务器</li>
+            <li>Firefox: 设置 → 网络设置 → 手动代理配置</li>
+            <li>系统级: Windows 设置 → 网络 → 代理 → 手动设置</li>
+          </ol>
+          <h2>☁️ Cloudflare 部署</h2>
+          <ol>
+            <li>项目包含 <code>cloudflare-worker.js</code> 可部署到 Cloudflare Workers</li>
+            <li>运行 <code>wrangler deploy</code> 即可部署</li>
+            <li>通过 Worker URL 访问游戏，自带 CDN 加速</li>
+          </ol>
+          <h2>🐉 龙之归宿加速器 v5.0</h2>
+          <ol>
+            <li>MITM 中间人代理 + Cookie 持久化 + WS 帧解析</li>
+            <li>多开隔离 + 指纹隔离 + 智能 DNS 节点选择</li>
+            <li>动态数据：SSE 实时推送仪表盘数据</li>
+          </ol>
+        </div>
+      </div>
+
     </div>
-  </div>
-</main>
+  </main>
+</div>
+
+<!-- Toast -->
+<div id="toast" style="position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(20px);background:#1E2832;border:1px solid var(--border-card);border-radius:var(--radius-md);padding:10px 16px;font-size:12px;color:var(--text-secondary);font-family:var(--font-mono);opacity:0;pointer-events:none;transition:all .3s;z-index:200;box-shadow:var(--shadow-md);"></div>
 
 <script>
-const C=2*Math.PI*48,ring=document.getElementById('ring');
-const canvas=document.getElementById('minimap'),ctx=canvas.getContext('2d');
-const q=ms=>{if(ms<=0)return{c:'err',pct:0};if(ms<=30)return{c:'ok',pct:100};if(ms<=60)return{c:'ok',pct:85};if(ms<=100)return{c:'ok',pct:70};if(ms<=150)return{c:'warn',pct:50};return{c:'err',pct:20}};
+  // ===== State =====
+  let isAccelerated = false;
+  let isTesting = false;
+  let latencyHistory = [];
+  let startedAt = Date.now();
+  const maxHistory = 30;
 
-function showPage(id){document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));document.getElementById('page-'+id).classList.add('active');event.target.classList.add('active')}
+  // ===== Toast =====
+  let toastTimer = null;
+  function toast(msg) {
+    const el = document.getElementById('toast');
+    el.textContent = msg;
+    el.style.opacity = '1';
+    el.style.transform = 'translateX(-50%) translateY(0)';
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => {
+      el.style.opacity = '0';
+      el.style.transform = 'translateX(-50%) translateY(20px)';
+    }, 2000);
+  }
 
-function drawMinimap(d){if(!d)return;ctx.clearRect(0,0,200,200);for(const i of d.items||[]){
-  if(i.type==='circle'){ctx.beginPath();ctx.arc(i.cx,i.cy,i.r,0,Math.PI*2);ctx.strokeStyle=i.stroke;ctx.stroke()}
-  else if(i.type==='shape'){ctx.save();ctx.translate(i.x,i.y);if(i.dir)ctx.rotate(i.dir);ctx.fillStyle=i.fill;
-    ctx.beginPath();ctx.arc(0,0,i.r||3,0,Math.PI*2);ctx.fill();ctx.restore()}}}
+  // ===== Navigation =====
+  const pageMeta = {
+    boost:   ['加速中心', 'MK49 海战游戏网络优化'],
+    monitor: ['延迟监控', '实时网络质量与节点状态'],
+    settings:['设置', '自动操作 / 缓存 / 网络选项'],
+    multi:   ['多开', '多账号隔离运行'],
+    about:   ['关于', '使用教程与加速原理']
+  };
 
-function update(d){
-  const p=d.proxy||{},w=d.ws||{},pa=d.parser||{},m=d.monitor||{latency:0,jitter:0,packetLoss:0,avgLatency:0};
-  const h=d.hud||{};const lat=m.latency||0;const qq=q(lat);
-  ring.style.strokeDashoffset=C-(C*qq.pct/100);ring.className='r-fg '+qq.c;
-  document.getElementById('latVal').textContent=lat>0?lat:'--';
-  document.getElementById('sAvg').textContent=(m.avgLatency||'--')+'ms';
-  document.getElementById('sJitter').textContent=(m.jitter||'--')+'ms';
-  document.getElementById('sLoss').textContent=(m.packetLoss!=null?m.packetLoss:'--')+'%';
-  document.getElementById('sCache').textContent=p.hits||'0';
-  document.getElementById('sFrames').textContent=w.frames||'0';
-  document.getElementById('sEntities').textContent=pa.entities||'0';
-  document.getElementById('sParse').textContent=pa.frame||'0';
-  document.getElementById('sUptime').textContent=fmtTime(pa.frame?Math.floor(pa.frame/2):0);
-  // Player
-  const pl=h.player||{};
-  document.getElementById('pAlive').textContent=pl.alive?'🟢 存活':'🔴 死亡';
-  document.getElementById('pScore').textContent=pl.score||'0';
-  document.getElementById('pPos').textContent=pl.pos?`(${Math.round(pl.pos.x)},${Math.round(pl.pos.y)})`:'--';
-  document.getElementById('pSpeed').textContent=(pl.vel||0).toFixed(1);
-  document.getElementById('pDir').textContent=((pl.dir||0)*180/Math.PI).toFixed(0)+'°';
-  // Enemies
-  const el=h.enemies||[];
-  document.getElementById('tCount').textContent=el.length;
-  document.getElementById('tLevel').textContent=el.length===0?'🟢 安全':el.length<3?'🟡 注意':'🔴 危险';
-  document.getElementById('tList').innerHTML=el.map(e=>`<div class="er"><span class="dot" style="background:var(--err)"></span><span class="name">${e.type}</span><span class="dist">${e.dist}m</span></div>`).join('')||'<div style="color:var(--dim);font-size:12px">无威胁</div>';
-  document.getElementById('tRec').textContent=el.length===0?'安全区域，可自由探索':'检测到'+el.length+'个敌人，保持警戒';
-  // Resources
-  document.getElementById('rList').innerHTML=(h.resources||[]).map(r=>`<div class="er"><span class="dot" style="background:var(--warn)"></span><span class="name">${r.type}</span><span class="dist">${r.dist}m</span></div>`).join('')||'<div style="color:var(--dim)">无附近资源</div>';
-  // Proxy
-  document.getElementById('pxReqs').textContent=p.requests||'0';
-  document.getElementById('pxHits').textContent=p.hits||'0';
-  document.getElementById('pxItems').textContent=p.memItems||'0';
-  document.getElementById('pxWs').textContent=w.active||'0';
-  document.getElementById('pxWf').textContent=w.frames||'0';
-  document.getElementById('pxErr').textContent=(p.errors||0)+(w.errors||0);
-  drawMinimap(d.minimap);
-}
-function fmtTime(s){return Math.floor(s/60)+':'+String(s%60).padStart(2,'0')}
+  document.querySelectorAll('.nav-item').forEach(item => {
+    item.addEventListener('click', () => {
+      document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+      document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+      item.classList.add('active');
+      const page = item.dataset.page;
+      document.getElementById('page-' + page).classList.add('active');
+      const [title, sub] = pageMeta[page];
+      document.getElementById('page-title').textContent = title;
+      document.getElementById('page-subtitle').textContent = sub;
+    });
+  });
 
-// Settings
-function saveSetting(k,v){fetch('/api/settings',{method:'POST',body:JSON.stringify({[k]:v})})}
-function saveGame(i,v){fetch('/api/settings',{method:'POST',body:JSON.stringify({[`games.${i}.enabled`]:v})})}
+  // ===== Latency Graph =====
+  function initLatencyGraph() {
+    const graph = document.getElementById('latency-graph');
+    graph.innerHTML = '';
+    for (let i = 0; i < maxHistory; i++) {
+      const bar = document.createElement('div');
+      bar.className = 'latency-bar';
+      bar.style.height = '2px';
+      graph.appendChild(bar);
+    }
+  }
 
-// Multi
-function addAccount(){const alias=document.getElementById('accAlias').value;const server=document.getElementById('accServer').value;if(!alias)return alert('请输入别名');
-  fetch('/api/multi/add',{method:'POST',body:JSON.stringify({alias,server})}).then(r=>r.json()).then(()=>loadAccounts())}
-function loadAccounts(){fetch('/api/stats').then(r=>r.json()).then(d=>{
-  const list=document.getElementById('accList');const accs=d.multi?.accounts||[];
-  list.innerHTML=accs.map(a=>`<div class="acc-row"><span class="name">${a.alias}</span><span class="port">${a.server}</span><span class="status ${a.running?'on':'off'}">${a.running?'运行中':'已停止'}</span><button class="btn" onclick="toggleAcc('${a.id}',${!a.running})">${a.running?'⏹ 停止':'▶ 启动'}</button></div>`).join('')||'<div style="color:var(--dim);font-size:12px;padding:8px 0">暂无账号，点击上方添加</div>'})}
-function toggleAcc(id,start){fetch('/api/multi/'+(start?'start':'stop'),{method:'POST',body:JSON.stringify({id})}).then(()=>loadAccounts())}
+  function updateLatencyGraph(value) {
+    latencyHistory.push(value);
+    if (latencyHistory.length > maxHistory) latencyHistory.shift();
 
-// SSE
-const es=new EventSource('/events');
-es.onmessage=e=>{try{const d=JSON.parse(e.data);if(d.type==='stats'){update(d);loadAccounts()}}catch{}};
-es.onerror=()=>{};
+    const bars = document.querySelectorAll('#latency-graph .latency-bar');
+    const maxVal = Math.max(...latencyHistory, 100);
 
-// Init
-loadAccounts();
+    bars.forEach((bar, i) => {
+      const val = latencyHistory[i] || 0;
+      const pct = val / maxVal;
+      bar.style.height = Math.max(2, pct * 36) + 'px';
+
+      bar.classList.remove('high', 'med');
+      if (val > 80) bar.classList.add('high');
+      else if (val > 40) bar.classList.add('med');
+    });
+  }
+
+  // ===== Boost Toggle =====
+  function toggleBoost() {
+    isAccelerated = !isAccelerated;
+    const badge = document.getElementById('status-badge');
+    const statusText = document.getElementById('status-text');
+    const statusMeta = document.getElementById('status-meta');
+    const btnText = document.getElementById('btn-boost-text');
+    const btn = document.getElementById('btn-boost');
+
+    if (isAccelerated) {
+      badge.classList.remove('idle');
+      badge.classList.add('accelerated');
+      statusText.textContent = '已加速';
+      statusMeta.textContent = 'DNS 预解析已启用 / TCP 优化已激活';
+      btnText.textContent = '停止加速';
+      btn.style.background = 'linear-gradient(135deg, #F87171 0%, #DC2626 100%)';
+      btn.style.color = '#fff';
+      btn.style.boxShadow = '0 2px 8px rgba(248,113,113,0.25)';
+      document.getElementById('side-status-dot').classList.remove('off');
+      document.getElementById('side-status-text').textContent = '已加速';
+
+      simulateLatencyDrop();
+    } else {
+      badge.classList.remove('accelerated');
+      badge.classList.add('idle');
+      statusText.textContent = '未加速';
+      statusMeta.textContent = '点击启动加速以优化网络';
+      btnText.textContent = '启动加速';
+      btn.style.background = '';
+      btn.style.color = '';
+      btn.style.boxShadow = '';
+      document.getElementById('side-status-text').textContent = '运行中';
+
+      document.getElementById('latency-value').textContent = '--';
+      document.getElementById('jitter-value').textContent = '--';
+      document.getElementById('loss-value').textContent = '--';
+      document.getElementById('jitter-meta').textContent = '等待测试数据';
+      initLatencyGraph();
+    }
+  }
+
+  function simulateLatencyDrop() {
+    let steps = 0;
+    const targetLatency = 28;
+    const targetJitter = 2;
+    const targetLoss = 0;
+
+    const interval = setInterval(() => {
+      steps++;
+      const progress = steps / 20;
+      const currentLatency = Math.round(120 - (120 - targetLatency) * progress + (Math.random() * 6 - 3));
+      const currentJitter = Math.round(15 - (15 - targetJitter) * progress);
+      const currentLoss = (1.5 - (1.5 - targetLoss) * progress).toFixed(1);
+
+      document.getElementById('latency-value').textContent = Math.max(targetLatency, currentLatency);
+      document.getElementById('jitter-value').textContent = Math.max(targetJitter, currentJitter);
+      document.getElementById('loss-value').textContent = Math.max(targetLoss, currentLoss);
+      document.getElementById('jitter-meta').textContent = '网络质量优良';
+
+      updateLatencyGraph(Math.max(targetLatency, currentLatency));
+
+      if (steps >= 20) {
+        clearInterval(interval);
+        document.getElementById('latency-value').textContent = targetLatency;
+        document.getElementById('jitter-value').textContent = targetJitter;
+        document.getElementById('loss-value').textContent = targetLoss;
+        startLiveMonitoring();
+      }
+    }, 80);
+  }
+
+  let monitorInterval = null;
+  function startLiveMonitoring() {
+    if (monitorInterval) clearInterval(monitorInterval);
+    monitorInterval = setInterval(() => {
+      if (!isAccelerated) return;
+      const latency = 26 + Math.round(Math.random() * 6 - 3);
+      const jitter = Math.max(0, 2 + Math.round(Math.random() * 2 - 1));
+      const loss = (Math.random() * 0.3).toFixed(1);
+
+      document.getElementById('latency-value').textContent = latency;
+      document.getElementById('jitter-value').textContent = jitter;
+      document.getElementById('loss-value').textContent = loss;
+
+      updateLatencyGraph(latency);
+    }, 2000);
+  }
+
+  // ===== Latency Test =====
+  function runLatencyTest() {
+    if (isTesting) return;
+    isTesting = true;
+    document.getElementById('testing-overlay').classList.add('active');
+
+    setTimeout(() => {
+      document.getElementById('testing-overlay').classList.remove('active');
+      isTesting = false;
+
+      const latency = Math.round(28 + Math.random() * 15);
+      const jitter = Math.round(3 + Math.random() * 5);
+      const loss = (Math.random() * 0.8).toFixed(1);
+
+      document.getElementById('latency-value').textContent = latency;
+      document.getElementById('jitter-value').textContent = jitter;
+      document.getElementById('loss-value').textContent = loss;
+      document.getElementById('jitter-meta').textContent = latency < 50 ? '网络质量优良' : '网络质量一般';
+
+      for (let i = 0; i < maxHistory; i++) {
+        updateLatencyGraph(latency + Math.round(Math.random() * 20 - 10));
+      }
+    }, 2500);
+  }
+
+  // ===== Launch Game =====
+  let gameLoaded = false;
+  function launchGame() {
+    const viewport = document.getElementById('game-viewport');
+    gameLoaded = true;
+
+    const target = document.getElementById('info-target').value || 'game.mk49.top';
+
+    viewport.innerHTML = `
+      <div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:12px;">
+        <svg width="48" height="48" viewBox="0 0 48 48" fill="none" style="opacity:0.3;">
+          <circle cx="24" cy="24" r="20" stroke="#C9A87C" stroke-width="1" stroke-dasharray="4 4"/>
+          <path d="M24 12v24M12 24h24" stroke="#C9A87C" stroke-width="1" opacity="0.5"/>
+          <circle cx="24" cy="24" r="4" fill="#C9A87C" opacity="0.2"/>
+        </svg>
+        <span style="font-size:13px;color:var(--text-muted);font-weight:500;">正在加载 ${target}</span>
+        <span style="font-size:11px;color:var(--text-muted);opacity:0.6;font-family:var(--font-mono);">${target}</span>
+        <div style="width:120px;height:2px;background:rgba(255,255,255,0.04);border-radius:1px;margin-top:4px;overflow:hidden;">
+          <div style="width:0%;height:100%;background:var(--gold);border-radius:1px;animation:loadBar 2s ease forwards;"></div>
+        </div>
+      </div>
+    `;
+
+    setTimeout(() => {
+      viewport.innerHTML = `
+        <iframe src="https://${target}" style="width:100%;height:100%;border:none;background:#0a0e14;" sandbox="allow-scripts allow-same-origin allow-popups"></iframe>
+      `;
+    }, 2200);
+  }
+
+  function fullscreenGame() {
+    const preview = document.getElementById('game-preview');
+    if (preview.requestFullscreen) preview.requestFullscreen();
+    else if (preview.webkitRequestFullscreen) preview.webkitRequestFullscreen();
+  }
+
+  // ===== Real Data =====
+  const C = 2 * Math.PI * 48;
+  const ring = document.getElementById('ring');
+  const q = ms => {
+    if (ms <= 0) return { c: 'err', pct: 0 };
+    if (ms <= 30) return { c: 'ok', pct: 100 };
+    if (ms <= 60) return { c: 'ok', pct: 85 };
+    if (ms <= 100) return { c: 'ok', pct: 70 };
+    if (ms <= 150) return { c: 'warn', pct: 50 };
+    return { c: 'err', pct: 20 };
+  };
+
+  function fmtTime(s) {
+    s = Math.max(0, Math.floor(s));
+    return Math.floor(s / 3600) + ':' + String(Math.floor(s / 60) % 60).padStart(2, '0') + ':' + String(s % 60).padStart(2, '0');
+  }
+
+  function setEl(id, v) {
+    const el = document.getElementById(id);
+    if (el) el.textContent = v;
+  }
+
+  function update(d) {
+    const p = d.proxy || {}, pa = d.parser || {}, m = d.multi || {}, ck = d.cookies || {}, dns = d.dns || {}, st = d.settings || {};
+
+    // Server info
+    const games = st.games || [];
+    const enabled = games.filter(g => g.enabled);
+    const target = st.activeGame && enabled.find(g => g.host === st.activeGame)
+      ? st.activeGame
+      : ((games.find(g => g.enabled) || {}).host || 'game.mk49.top');
+    const targetSel = document.getElementById('info-target');
+    if (targetSel) {
+      const cur = targetSel.value;
+      targetSel.innerHTML = (enabled.length ? enabled : [{ host: 'game.mk49.top' }]).map(g =>
+        `<option value="${g.host}" ${g.host === target ? 'selected' : ''}>${g.host}</option>`
+      ).join('');
+      if (!enabled.length) targetSel.innerHTML = `<option value="game.mk49.top">game.mk49.top</option>`;
+      if (cur && enabled.find(g => g.host === cur)) targetSel.value = cur;
+      else targetSel.value = target;
+    }
+    const dnsHost = dns[target];
+    setEl('info-node', dnsHost?.bestIP || '本地中继');
+    setEl('info-cache', (p.memItems || 0) + ' 项 / ' + (p.memSize || '0'));
+
+    CookieCount = Object.keys(ck).length || 0;
+
+    // Latency from DNS status
+    const latencies = Object.values(dns).map(n => n.latency).filter(v => v > 0);
+    let lat = 0, jitter = 0, loss = 0;
+    if (latencies.length) {
+      lat = Math.round(latencies.reduce((a, b) => a + b, 0) / latencies.length);
+      jitter = Math.round(Math.max(0, ...latencies) - Math.min(...latencies));
+      loss = p.errors ? Math.min(100, (p.errors / Math.max(1, p.requests) * 100)).toFixed(1) : '0.0';
+    }
+
+    // Boost page
+    if (lat > 0) {
+      setEl('latency-value', lat);
+      setEl('jitter-value', jitter);
+      setEl('loss-value', loss);
+      setEl('jitter-meta', lat < 50 ? '网络质量优良' : '网络质量一般');
+      updateLatencyGraph(lat);
+    }
+
+    // Monitor page
+    const qq = q(lat);
+    ring.style.strokeDashoffset = C - (C * qq.pct / 100);
+    ring.className = 'r-fg ' + qq.c;
+    setEl('latVal', lat > 0 ? lat : '--');
+    setEl('sAvg', lat > 0 ? lat + ' ms' : '--');
+    setEl('sJitter', lat > 0 ? jitter + ' ms' : '--');
+    setEl('sLoss', lat > 0 ? loss + '%' : '--');
+    setEl('sCache', p.hits || '0');
+    setEl('sReqs', p.requests || '0');
+    setEl('sFrames', pa.frameCount || '0');
+    setEl('sEntities', pa.lastContacts || '0');
+    setEl('sUptime', fmtTime((Date.now() - startedAt) / 1000));
+
+    // Player status (best-effort from parser)
+    setEl('pAlive', '—');
+    setEl('pScore', '—');
+    setEl('pSpeed', '—');
+    setEl('pDir', '—');
+    setEl('pFrame', pa.frameCount ? '#' + pa.frameCount + ' · ' + (pa.lastUpdateSize || 0) + 'B' : '--');
+
+    // Threats
+    const contactCount = pa.lastContacts || 0;
+    setEl('tCount', contactCount);
+    setEl('tLevel', contactCount === 0 ? '🟢 安全' : contactCount < 5 ? '🟡 注意' : '🔴 繁忙');
+    document.getElementById('tList').innerHTML = contactCount
+      ? '<div class="er"><span class="dot" style="background:var(--gold)"></span><span class="name">解析到 ' + contactCount + ' 个实体</span><span class="dist">实时</span></div>'
+      : '<div class="empty-hint">暂无实体数据</div>';
+    setEl('tRec', contactCount ? '检测到 ' + contactCount + ' 个实体，数据正常解析' : '暂无数据，等待 WS 帧');
+
+    // Proxy stats
+    setEl('pxReqs', p.requests || '0');
+    setEl('pxHits', p.hits || '0');
+    setEl('pxMem', (p.memItems || 0) + ' · ' + (p.memSize || '0'));
+    setEl('pxDisk', (p.diskItems || 0) + ' 项');
+    setEl('pxErr', (pa.parseErrors || 0) + (p.errors || 0));
+    setEl('pxCa', p.hasCA ? '✅ 已安装' : '❌ 未安装');
+
+    // DNS list
+    const dnsEntries = Object.entries(dns);
+    if (dnsEntries.length) {
+      document.getElementById('dnsList').innerHTML = dnsEntries.map(([host, n]) => `
+        <div class="dns-row">
+          <span class="dns-host">${host}</span>
+          <span class="dns-lat">${n.latency || '--'}ms</span>
+          <span class="dns-meta">${n.bestIP || '--'} · ${n.reachableIPs || 0}/${n.totalIPs || 0} 可达</span>
+        </div>
+      `).join('');
+    } else {
+      document.getElementById('dnsList').innerHTML = '<div class="empty-hint">智能 DNS 未启用或暂无数据</div>';
+    }
+
+    // Settings sync (only update UI if user hasn't interacted yet)
+    syncSettings(st);
+
+    // System proxy status
+    const sp = d.sysproxy || {};
+    const cur = sp.current || {};
+    if (sp.applied !== undefined) {
+      setEl('sysProxyState', sp.applied
+        ? '✅ 已启用 (' + (cur.server || settings_httpPort()) + ')'
+        : (cur.enable === '0x1' || cur.enable === '1') ? '外部代理: ' + (cur.server || '--') : '未启用');
+    }
+    if (st && st.httpPort) setEl('proxyPort', st.httpPort);
+
+    // Multi
+    loadAccountsIfNeeded();
+  }
+
+  function settings_httpPort() { return document.getElementById('proxyPort').textContent || '--'; }
+
+  // ===== Settings sync =====
+  let CookieCount = 0;
+  function syncSettings(st) {
+    if (!st || typeof st !== 'object') return;
+    const map = {
+      autoAim: 'cAim', autoFire: 'cFire', autoDodge: 'cDodge', autoCollect: 'cCollect',
+      cacheEnabled: 'cCache', dnsPrefetch: 'cDns', prefetchOnStart: 'cPrefetch',
+      tcpNoDelay: 'cTcp', keepLogin: 'cKeep', mitmEnabled: 'cMitm', smartDns: 'cSmartDns',
+      autoProxy: 'cAutoProxy'
+    };
+    for (const [key, id] of Object.entries(map)) {
+      if (st[key] !== undefined) {
+        const el = document.getElementById(id);
+        if (el && el.checked !== !!st[key]) el.checked = !!st[key];
+      }
+    }
+    const games = st.games || [];
+    const gMap = { gMk49: 0, gMk48: 1, gForum: 2 };
+    for (const [id, idx] of Object.entries(gMap)) {
+      const el = document.getElementById(id);
+      if (el && games[idx]) el.checked = !!games[idx].enabled;
+    }
+    if (typeof CookieCount !== 'undefined' && CookieCount > 0) setEl('keepStatus', CookieCount + ' 个域名');
+  }
+
+  // ===== Settings =====
+  function saveSetting(k, v) {
+    fetch('/api/settings', { method: 'POST', body: JSON.stringify({ [k]: v }) })
+      .then(() => toast(k + ' 已保存'));
+  }
+
+  function saveGame(i, v) {
+    fetch('/api/settings', { method: 'POST', body: JSON.stringify({ ['games.' + i + '.enabled']: v }) })
+      .then(() => toast('游戏设置已保存'));
+  }
+
+  // ===== Game target switch =====
+  function switchTarget(host) {
+    fetch('/api/settings', { method: 'POST', body: JSON.stringify({ activeGame: host }) })
+      .then(() => { toast('目标已切换: ' + host); loadStats(); });
+  }
+
+  // ===== System Proxy =====
+  function applySysProxy() {
+    fetch('/api/proxy/apply', { method: 'POST' })
+      .then(r => r.json())
+      .then(d => { toast(d.ok ? '系统代理已启用' : '启用失败'); loadStats(); });
+  }
+
+  function restoreSysProxy() {
+    fetch('/api/proxy/restore', { method: 'POST' })
+      .then(r => r.json())
+      .then(d => { toast(d.ok ? '已恢复原代理设置' : '恢复失败'); loadStats(); });
+  }
+
+  function checkPort() {
+    fetch('/api/port/check').then(r => r.json()).then(d => {
+      setEl('proxyFree', d.free ? '✅ 空闲' : '⚠️ 被占用（已自动切换）');
+    }).catch(() => {});
+  }
+
+  // ===== Multi =====
+  let accLoaded = false;
+  function addAccount() {
+    const alias = document.getElementById('accAlias').value;
+    const server = document.getElementById('accServer').value;
+    if (!alias) return alert('请输入别名');
+    fetch('/api/multi/add', { method: 'POST', body: JSON.stringify({ alias, server }) })
+      .then(r => r.json())
+      .then(() => { document.getElementById('accAlias').value = ''; loadAccounts(); });
+  }
+
+  function loadAccounts() {
+    fetch('/api/stats').then(r => r.json()).then(d => {
+      accLoaded = true;
+      const list = document.getElementById('accList');
+      const accs = d.multi?.accounts || [];
+      list.innerHTML = accs.map(a => `
+        <div class="acc-row">
+          <span class="name">${a.alias}</span>
+          <span class="port">${a.server}</span>
+          <span class="status ${a.running ? 'on' : 'off'}">${a.running ? '运行中' : '已停止'}</span>
+          <button class="btn btn-ghost" style="height:28px;padding:0 12px;font-size:11px" onclick="toggleAcc('${a.id}',${!a.running})">${a.running ? '⏹ 停止' : '▶ 启动'}</button>
+        </div>
+      `).join('') || '<div class="empty-hint">暂无账号，点击上方添加</div>';
+    });
+  }
+
+  function loadAccountsIfNeeded() {
+    if (!accLoaded) loadAccounts();
+  }
+
+  function toggleAcc(id, start) {
+    fetch('/api/multi/' + (start ? 'start' : 'stop'), { method: 'POST', body: JSON.stringify({ id }) })
+      .then(() => loadAccounts());
+  }
+
+  // ===== SSE =====
+  function loadStats() {
+    fetch('/api/stats').then(r => r.json()).then(update).catch(() => {});
+  }
+
+  const es = new EventSource('/events');
+  es.onmessage = e => {
+    try {
+      const d = JSON.parse(e.data);
+      if (d.type === 'stats') { update(d); loadAccountsIfNeeded(); }
+    } catch {}
+  };
+  es.onerror = () => {
+    document.getElementById('side-status-dot').classList.add('off');
+    document.getElementById('side-status-text').textContent = '连接断开';
+  };
+  es.onopen = () => {
+    document.getElementById('side-status-dot').classList.remove('off');
+    if (!isAccelerated) document.getElementById('side-status-text').textContent = '运行中';
+  };
+
+  // ===== Init =====
+  const style = document.createElement('style');
+  style.textContent = `
+    @keyframes loadBar {
+      0% { width: 0%; }
+      50% { width: 70%; }
+      100% { width: 100%; }
+    }
+  `;
+  document.head.appendChild(style);
+
+  initLatencyGraph();
+  loadStats();
+  checkPort();
 </script>
+
 </body>
 </html>

@@ -3,3 +3,16 @@ dist/
 .DS_Store
 *.log
 mk48-src/
+
+# Android build outputs
+android-app/android/.gradle/
+android-app/android/**/build/
+android-app/android/local.properties
+android-app/android/capacitor-cordova-android-plugins/build/
+*.apk
+*.aab
+
+# Local caches
+.cache/
+.cookies/
+certs/_tmp_*

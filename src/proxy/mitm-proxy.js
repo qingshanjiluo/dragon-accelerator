@@ -60,7 +60,7 @@ class MitmProxy {
       // 生成 CA
       try {
         const { execSync } = require('child_process');
-        execSync(`openssl req -x509 -new -nodes -keyout "${caKeyPath}" -out "${caCertPath}" -days 3650 -subj "/CN=Dragon Accelerator CA" 2>/dev/null`, { timeout: 5000 });
+        execSync(`openssl req -x509 -new -nodes -keyout "${caKeyPath}" -out "${caCertPath}" -days 3650 -subj "/CN=Dragon Accelerator CA" 2>nul`, { timeout: 5000 });
         this.caKey = fs.readFileSync(caKeyPath);
         this.caCert = fs.readFileSync(caCertPath);
         console.log('[MITM] 已生成 CA 证书 (安装 certs/ca-cert.pem 到浏览器信任列表)');
@@ -270,7 +270,7 @@ class MitmProxy {
     // 生成新证书
     try {
       const { execSync } = require('child_process');
-      execSync(`openssl req -x509 -new -nodes -sha256 -days 365 -out "${certPath}" -keyout "${keyPath}" -subj "/CN=${host}" -addext "subjectAltName=DNS:${host}" 2>/dev/null`, { timeout: 5000 });
+      execSync(`openssl req -x509 -new -nodes -sha256 -days 365 -out "${certPath}" -keyout "${keyPath}" -subj "/CN=${host}" -addext "subjectAltName=DNS:${host}" 2>nul`, { timeout: 5000 });
       const cert = { key: fs.readFileSync(keyPath), cert: fs.readFileSync(certPath) };
       this.certCache.set(host, cert);
       return cert;

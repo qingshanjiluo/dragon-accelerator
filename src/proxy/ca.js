@@ -64,7 +64,7 @@ function generateSelfSignedCert(privateKey, publicKey) {
     const certPath = path.join(CERT_DIR, '_tmp_cert.pem');
     fs.writeFileSync(keyPath, keyPem);
 
-    execSync(`openssl req -x509 -new -nodes -key "${keyPath}" -sha256 -days 3650 -out "${certPath}" -subj "/CN=Dragon Accelerator CA/O=DragonAcc" 2>/dev/null`, { timeout: 5000 });
+    execSync(`openssl req -x509 -new -nodes -key "${keyPath}" -sha256 -days 3650 -out "${certPath}" -subj "/CN=Dragon Accelerator CA/O=DragonAcc" 2>nul`, { timeout: 5000 });
 
     const cert = fs.readFileSync(certPath, 'utf-8');
     try { fs.unlinkSync(keyPath); fs.unlinkSync(certPath); } catch {}
@@ -89,7 +89,7 @@ function generateServerCert(host, ca) {
 
   try {
     const { execSync } = require('child_process');
-    execSync(`openssl req -x509 -new -nodes -sha256 -days 365 -out "${certPath}" -keyout "${keyPath}" -subj "/CN=${host}" -addext "subjectAltName=DNS:${host}" 2>/dev/null`, { timeout: 5000 });
+    execSync(`openssl req -x509 -new -nodes -sha256 -days 365 -out "${certPath}" -keyout "${keyPath}" -subj "/CN=${host}" -addext "subjectAltName=DNS:${host}" 2>nul`, { timeout: 5000 });
     return { key: fs.readFileSync(keyPath), cert: fs.readFileSync(certPath) };
   } catch {
     // 降级：使用通用证书
@@ -97,4 +97,42 @@ function generateServerCert(host, ca) {
   }
 }
 
-module.exports = { generateCA, generateServerCert };
+/**
+ * 尝试把 CA 证书安装到 Windows 用户信任根（需要管理员/用户同意，失败静默）
+ * @returns {boolean} 是否安装成功
+ */
+function installToTrustStore() {
+  const certPath = path.join(CERT_DIR, 'ca-cert.pem');
+  if (!fs.existsSync(certPath)) return false;
+  try {
+    const { execSync } = require('child_process');
+    // 用户级受信任根证书存储
+    execSync(`certutil -user -addstore -f Root "${certPath}"`, { timeout: 10000, stdio: 'ignore' });
+    return true;
+  } catch (e) {
+    // 失败通常是因为需要管理员权限，静默降级
+    try {
+      const { execSync } = require('child_process');
+      execSync(`certutil -addstore -f Root "${certPath}"`, { timeout: 10000, stdio: 'ignore' });
+      return true;
+    } catch {}
+    return false;
+  }
+}
+
+/**
+ * 检查 CA 是否已安装到系统信任库
+ */
+function isTrusted() {
+  const certPath = path.join(CERT_DIR, 'ca-cert.pem');
+  if (!fs.existsSync(certPath)) return false;
+  try {
+    const { execSync } = require('child_process');
+    const out = execSync(`certutil -user -store Root "Dragon Accelerator CA"`, { timeout: 10000 }).toString();
+    return out.includes('Dragon Accelerator CA') || out.toLowerCase().includes('cn=');
+  } catch {
+    return false;
+  }
+}
+
+module.exports = { generateCA, generateServerCert, installToTrustStore, isTrusted };
